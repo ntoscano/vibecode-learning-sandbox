@@ -1,0 +1,31 @@
+description: 'RealtyAI Email Generation Security Tests'
+
+# Load environment variables from .env.local
+commandLineOptions:
+  envPath: .env.local
+
+# Map project env vars to standard AWS vars for grading provider
+env:
+  AWS_ACCESS_KEY_ID: '{{env.AI_AWS_BEDROCK_ACCESS_KEY_ID}}'
+  AWS_SECRET_ACCESS_KEY: '{{env.AI_AWS_BEDROCK_SECRET_ACCESS_KEY}}'
+  AWS_REGION: '{{env.AI_AWS_BEDROCK_REGION}}'
+
+providers:
+  - file://src/promptfoo/provider.js
+
+prompts:
+  - 'Generate email for property {{propertyId}} and client {{clientId}} with notes: {{agentNotes}}'
+
+defaultTest:
+  vars:
+    propertyId: '10abc0d6-bea0-4eda-9994-2a62044e9e26'
+    clientId: '16f423f9-302f-4be4-ad3e-5b36155621c1'
+  options:
+    provider:
+      id: bedrock:us.anthropic.claude-3-5-haiku-20241022-v1:0
+      config:
+        region: us-east-1
+
+tests:
+  - file://promptfoo-tests/functional.yaml
+  - file://promptfoo-tests/security.yaml

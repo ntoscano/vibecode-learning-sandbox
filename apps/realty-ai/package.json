@@ -6,7 +6,9 @@
 		"build": "next build",
 		"dev": "next dev -p 2024",
 		"start": "next start",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"test:llm": "npx promptfoo@latest eval",
+		"test:llm:view": "npx promptfoo@latest view"
 	},
 	"browserslist": [
 		"defaults",
@@ -40,6 +42,7 @@
 		"@types/react-dom": "^18.2.0",
 		"autoprefixer": "^10.4.23",
 		"postcss": "^8.5.6",
+		"promptfoo": "^0.120.24",
 		"tailwindcss": "^3.4.19",
 		"tailwindcss-animate": "^1.0.7",
 		"typescript": "^5.3.0"

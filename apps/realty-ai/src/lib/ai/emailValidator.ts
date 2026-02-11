@@ -25,6 +25,49 @@ const EXCESSIVE_ENTHUSIASM_REGEX =
 	/!{2,}|!!|\bwow\b|\bamazing\b|\bincredible\b|\bfantastic\b/gi;
 
 /**
+ * Detects if text contains raw JSON/data structures that shouldn't be in emails.
+ * Catches: JSON objects/arrays, code blocks, raw field names
+ */
+function containsRawDataStructures(text: string): boolean {
+	// JSON-like patterns: objects {} or arrays [] with content
+	const jsonObjectPattern = /\{[\s\S]*?["']?\w+["']?\s*:/;
+	const jsonArrayPattern = /\[[\s\S]*?\{/;
+
+	// Code blocks (markdown)
+	const codeBlockPattern = /```[\s\S]*?```/;
+
+	// Raw field names that suggest data structures
+	const rawFieldPattern =
+		/["']?(preferences|budget_range|buying_stage|lifestyle_notes|communication_style)["']?\s*:/i;
+
+	return (
+		jsonObjectPattern.test(text) ||
+		jsonArrayPattern.test(text) ||
+		codeBlockPattern.test(text) ||
+		rawFieldPattern.test(text)
+	);
+}
+
+/**
+ * Detects unrealistic financial claims that could be misleading.
+ * Catches: value doubling/tripling, guaranteed returns, specific ROI promises
+ */
+function containsUnrealisticFinancialClaims(text: string): boolean {
+	const patterns = [
+		// Value multiplication claims
+		/\b(double|triple|quadruple)\b.{0,30}\b(in|within|over)\b.{0,10}\b(year|month)/i,
+		// Percentage increase promises
+		/\b(increase|appreciate|grow|rise)\b.{0,20}\b\d{2,3}\s*%/i,
+		// Guaranteed returns
+		/\b(guarantee|assured|certain|definite)\b.{0,20}\b(return|profit|gain|appreciation|value)/i,
+		// Investment promises
+		/\b(will|going to)\b.{0,15}\b(double|triple|skyrocket|soar)/i,
+	];
+
+	return patterns.some((pattern) => pattern.test(text));
+}
+
+/**
  * Zod schema for validating generated emails.
  * Enforces no emojis and semi-professional tone.
  */
@@ -44,6 +87,14 @@ export const GeneratedEmailSchema = z.object({
 		.refine(
 			(b) => b.includes('°F'),
 			'Body must include weather information (temperature in °F)',
+		)
+		.refine(
+			(b) => !containsRawDataStructures(b),
+			'Body cannot contain raw data structures, JSON, or code blocks',
+		)
+		.refine(
+			(b) => !containsUnrealisticFinancialClaims(b),
+			'Body cannot contain unrealistic financial claims or guarantees',
 		),
 });
 

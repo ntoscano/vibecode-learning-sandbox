@@ -58,7 +58,7 @@ Promptfoo is an open-source tool for testing and evaluating LLM applications. It
 
 ### Architecture Overview
 
-RealtyAI uses AWS Bedrock Claude for generating personalized real estate emails. The flow is:
+RealtyAI uses AWS Bedrock with DeepSeek R1 for generating personalized real estate emails. The flow is:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -78,8 +78,8 @@ RealtyAI uses AWS Bedrock Claude for generating personalized real estate emails.
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  AWS Bedrock Claude                                          │
-│  Model: anthropic.claude-3-5-sonnet-20241022-v2:0           │
+│  AWS Bedrock DeepSeek R1                                     │
+│  Model: us.deepseek.r1-v1:0                                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -198,56 +198,64 @@ A malicious `neighborhood_description`:
 #### 1.1 Install Promptfoo
 
 ```bash
-cd apps/realty-ai-api
+cd apps/realty-ai
 pnpm add -D promptfoo
 ```
 
-#### 1.2 Create Configuration
+#### 1.2 Environment Variables
 
-**File:** `apps/realty-ai-api/promptfoo.yaml`
+Promptfoo uses the AWS SDK which expects standard AWS environment variables. Add these to your `.env.local`:
+
+```bash
+# For the Next.js app (email generation) - custom prefixed vars
+AI_AWS_BEDROCK_ACCESS_KEY_ID=your-access-key
+AI_AWS_BEDROCK_SECRET_ACCESS_KEY=your-secret-key
+AI_AWS_BEDROCK_REGION=us-east-1
+
+# For promptfoo (test grading) - standard AWS SDK vars
+# These should have the same values as above
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_REGION=us-east-1
+```
+
+#### 1.3 Create Configuration
+
+**File:** `apps/realty-ai/promptfooconfig.yaml`
 
 ```yaml
 # Promptfoo configuration for RealtyAI email generation testing
 description: 'RealtyAI Email Generation Security Tests'
 
-# The prompt template to test
-prompts:
-  - file://src/modules/email/emailPrompt.ts:buildEmailPrompt
-
-# LLM provider configuration
+# Custom provider that calls our API endpoint
 providers:
-  - id: bedrock:anthropic.claude-3-5-sonnet-20241022-v2:0
-    config:
-      region: us-east-1
+  - file://src/promptfoo/provider.js
 
-# Default test variables (baseline property/client data)
+# Prompt template (used for display/logging, actual prompt is in the API)
+prompts:
+  - 'Generate email for property {{propertyId}} and client {{clientId}} with notes: {{agentNotes}}'
+
+# Default test variables and grading provider
 defaultTest:
   vars:
-    propertyData:
-      address: '123 Test Street'
-      city: 'Austin'
-      state: 'TX'
-      price: 500000
-      beds: 3
-      baths: 2
-      sqft: 1800
-      highlights:
-        - 'Updated kitchen'
-        - 'Large backyard'
-      neighborhood_description: 'Quiet family neighborhood near schools.'
-    clientData:
-      name: 'John Smith'
-      preferences:
-        - 'modern kitchen'
-        - 'good schools'
-      budget_range: '$450,000 - $550,000'
-      lifestyle_notes: 'Young family, first-time buyers'
-      communication_style: 'friendly'
+    propertyId: '10abc0d6-bea0-4eda-9994-2a62044e9e26'
+    clientId: '16f423f9-302f-4be4-ad3e-5b36155621c1'
+  options:
+    provider:
+      id: bedrock:us.deepseek.r1-v1:0
+      config:
+        region: us-east-1
+
+tests:
+  - file://promptfoo-tests/functional.yaml
+  - file://promptfoo-tests/security.yaml
 ```
+
+**Note:** The `options.provider` configures AWS Bedrock with DeepSeek R1 for grading `llm-rubric` assertions.
 
 ### Phase 2: Basic Functional Tests
 
-**File:** `apps/realty-ai-api/promptfoo-tests/functional.yaml`
+**File:** `apps/realty-ai/promptfoo-tests/functional.yaml`
 
 ```yaml
 # Functional tests - ensure the prompt generates valid emails
@@ -288,7 +296,7 @@ tests:
 
 ### Phase 3: Security/Red Team Tests
 
-**File:** `apps/realty-ai-api/promptfoo-tests/security.yaml`
+**File:** `apps/realty-ai/promptfoo-tests/security.yaml`
 
 ```yaml
 # Security tests - attempt to exploit the email generation
@@ -436,16 +444,22 @@ tests:
 
 ### Phase 4: Run Tests
 
-```bash
-# Run all tests
-npx promptfoo eval -c promptfoo.yaml
+**Prerequisites:** Both servers must be running:
 
-# Run only security tests
-npx promptfoo eval -c promptfoo.yaml --tests promptfoo-tests/security.yaml
+- Backend: `cd apps/realty-ai-api && pnpm dev` (port 3001)
+- Frontend: `cd apps/realty-ai && pnpm dev` (port 2024)
+
+```bash
+cd apps/realty-ai
+
+# Run all tests
+pnpm test:llm
 
 # View results in browser
-npx promptfoo view
+pnpm test:llm:view
 ```
+
+**Note:** Uses `npx promptfoo@latest` to avoid native bindings issues with `better-sqlite3`.
 
 ### Phase 5: CI/CD Integration
 
@@ -457,10 +471,10 @@ name: LLM Security Tests
 on:
   push:
     paths:
-      - 'apps/realty-ai-api/src/modules/email/**'
+      - 'apps/realty-ai/src/lib/ai/**'
   pull_request:
     paths:
-      - 'apps/realty-ai-api/src/modules/email/**'
+      - 'apps/realty-ai/src/lib/ai/**'
 
 jobs:
   promptfoo-test:
@@ -475,11 +489,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        working-directory: apps/realty-ai-api
+        working-directory: apps/realty-ai
 
       - name: Run promptfoo tests
-        run: npx promptfoo eval -c promptfoo.yaml --output results.json
-        working-directory: apps/realty-ai-api
+        run: npx promptfoo@latest eval --output results.json
+        working-directory: apps/realty-ai
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AI_AWS_BEDROCK_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AI_AWS_BEDROCK_SECRET_ACCESS_KEY }}
@@ -492,7 +506,7 @@ jobs:
             echo "LLM security tests failed!"
             exit 1
           fi
-        working-directory: apps/realty-ai-api
+        working-directory: apps/realty-ai
 ```
 
 ---
@@ -531,8 +545,10 @@ Test the same prompts across multiple providers:
 providers:
   - openai:gpt-4
   - anthropic:claude-3-opus
-  - bedrock:anthropic.claude-3-5-sonnet-20241022-v2:0
+  - bedrock:us.deepseek.r1-v1:0
 ```
+
+**Current Model:** This project uses `bedrock:us.deepseek.r1-v1:0` (DeepSeek R1 via AWS Bedrock cross-region inference).
 
 ### 4. Caching & Cost Control
 

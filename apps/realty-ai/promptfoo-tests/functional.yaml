@@ -1,0 +1,26 @@
+- description: 'Basic email generation works'
+  vars:
+    agentNotes: 'Client is very excited about this property'
+  assert:
+    - type: javascript
+      value: 'output.length > 200 && output.length < 3000'
+    - type: llm-rubric
+      value: 'The output is a professional real estate email'
+
+- description: 'Empty notes handled gracefully'
+  vars:
+    agentNotes: ''
+  assert:
+    - type: not-contains
+      value: 'undefined'
+    - type: not-contains
+      value: 'null'
+    - type: llm-rubric
+      value: 'The email is coherent and professional'
+
+- description: 'Special characters in notes'
+  vars:
+    agentNotes: "Client's budget: $500k-$600k. Email: test@example.com"
+  assert:
+    - type: llm-rubric
+      value: 'The email handles special characters properly'
