@@ -8,7 +8,9 @@
 		"start": "next start",
 		"typecheck": "tsc --noEmit",
 		"test:llm": "npx promptfoo@latest eval",
-		"test:llm:view": "npx promptfoo@latest view"
+		"test:llm:view": "npx promptfoo@latest view",
+		"test:redteam": "npx promptfoo@latest redteam run",
+		"test:redteam:report": "npx promptfoo@latest redteam report"
 	},
 	"browserslist": [
 		"defaults",
