@@ -79,7 +79,7 @@ This is the project you built. You know every line. When they ask you to whitebo
 User clicks cell
   → Frontend: applyMove(board, position, 'X') → getGameStatus(board)
   → If game continues:
-      POST /api/ai-move { board: CellValue[9] }
+      POST /api/ai-move { board: CellValue[9] }       ← Next.js API route (same process)
         → API route: validates board shape + game status
         → moveGraph.invoke({ board })
             → inputValidation → moveGeneration (LLM + 3 retries) → moveValidation
@@ -87,8 +87,10 @@ User clicks cell
         → Response: { position: number, board: CellValue[9] }
   → Frontend: update state with AI board → getGameStatus()
   → If game over:
-      GraphQL createGame mutation → PostgreSQL
-  → Sidebar: useGameHistory() → refetch()
+      Apollo Client → POST tictactoe-api:3002/graphql   ← separate NestJS service
+        → PostGraphile auto-generated createGame mutation
+        → PostgreSQL (game table: board_state, status, winner, moves)
+  → Sidebar: useGameHistory() → Apollo query → tictactoe-api → PostgreSQL
 ```
 
 #### AI pipeline (3-node LangGraph)
@@ -124,7 +126,7 @@ page.tsx (state owner — useState<GameState>)
 
 ```
 ┌──────────────────┐   ┌────────────────┐   ┌─────────────────────┐
-│  React UI         │   │  API Route     │   │  AI Pipeline        │
+│  React UI         │   │  Next.js API   │   │  AI Pipeline        │
 │  page.tsx         │──→│  /api/ai-move  │──→│  moveGraph          │
 │  (presentation    │   │  (boundary +   │   │  (LangGraph:        │
 │   + state)        │   │   validation)  │   │   3 nodes)          │
@@ -132,13 +134,23 @@ page.tsx (state owner — useState<GameState>)
          │                     │                       │
          │              ┌──────────────┐               │
          │              │  gameLogic   │               │
-         └─────────────→│  (rules)     │←──────────────┘
-                        └──────────────┘
-                        deterministic, pure
-                        NEVER trusts LLM
-                        Both UI and AI pipeline
-                        depend on this — single
-                        source of truth for rules
+         └──────┬──────→│  (rules)     │←──────────────┘
+                │       └──────────────┘
+                │       deterministic, pure, shared
+                │
+                ↓ Apollo Client (GraphQL)
+┌──────────────────────────────────────────────────┐
+│  tictactoe-api (NestJS, port 3002)               │
+│  PostGraphile: auto-generates GraphQL from DB    │
+│  No custom resolvers — 100% schema-driven        │
+└──────────────────────────────────────────────────┘
+                │
+                ↓ TypeORM
+┌──────────────────────────────────────────────────┐
+│  PostgreSQL (Docker, port 54322)                 │
+│  game table: id, board_state, status, winner,    │
+│  moves, created_at, updated_at                   │
+└──────────────────────────────────────────────────┘
 ```
 
 #### Architecture decisions and WHY
@@ -160,6 +172,16 @@ The game is latency-sensitive — you can't round-trip to the DB for every move.
 
 **Why flat array vs. 2D grid for the board?**
 The board is `Board = [CellValue x 9]` — a flat 9-element tuple, not a 3x3 matrix. Why? Serialization simplicity: JSON, GraphQL, and LLM prompts all handle flat arrays natively. A single index (0-8) is unambiguous for the LLM — no confusion about `(row, col)` ordering. Win checking uses a constant `WIN_LINES` array of index triples — cleaner than nested loops. The flat representation also makes the type literal: TypeScript enforces exactly 9 elements at the type level.
+
+**Why a separate API service with PostGraphile?**
+The persistence layer is a standalone NestJS service (`tictactoe-api`) running PostGraphile, which auto-generates a complete GraphQL API from the PostgreSQL schema. No custom resolvers — the `game` table's columns become GraphQL types, and CRUD mutations are generated automatically. Why this pattern?
+
+- **Database-first development:** Define the schema in PostgreSQL (via TypeORM migrations), and the API writes itself. Adding a column to the `game` table immediately exposes it in GraphQL. Zero boilerplate.
+- **Separation of AI and persistence services:** The Next.js app handles the AI pipeline (LangGraph + LLM). The NestJS app handles data persistence. Neither depends on the other's internals. You can scale, deploy, and debug them independently.
+- **Schema-driven API is the Inkeep pattern:** Inkeep's architecture is heavily schema-driven — their agents SDK generates configuration from type definitions, their visual builder and code SDK share a schema. PostGraphile is the same principle applied to data access.
+
+**Why Docker for the database?**
+PostgreSQL runs in a Docker container (`docker-compose up -d`) so every developer gets an identical database with zero local installation. The schema is managed by TypeORM migrations, so `npm run migration:run` reproduces the exact production schema locally. Containerized databases are table stakes for reproducible local dev — no "works on my machine" issues, no version mismatches, and CI can spin up the same container for integration tests.
 
 ## 4. Implementation Phase — React/Next.js Patterns
 
