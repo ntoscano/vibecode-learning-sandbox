@@ -1,261 +1,227 @@
 # Ralph Progress Log
-Started: Sat Jan 24 19:14:00 PST 2026
----
+Started: Thu Feb 26 16:55:08 PST 2026
 
 ## Codebase Patterns
-- NestJS apps in this monorepo need separate eslint/prettier configs because the root config uses @trivago/prettier-plugin-sort-imports which doesn't support decorators
-- Add apps/realty-ai-api to .prettierignore and .eslintrc.js ignorePatterns to avoid decorator parsing errors
-- Use `root: true` in app-level .eslintrc.js to prevent inheritance from root config
-- NestJS CLI requires tsconfig.build.json in the app directory
-- Use dotenv.config() with explicit path for .env.local loading (dotenv/config only loads .env)
-- TypeORM CLI scripts need `--project tsconfig.json` flag for ts-node to pick up decorator support
-- uuid-ossp extension must be created by superuser (postgres) before running migrations that use uuid_generate_v4()
-- PostGraphile uses postgraphile-nest for NestJS integration; use PostGraphileModule.forRootAsync() with factory function
-- PostGraphile auto-generates GraphQL API from database; queries use connection pattern: allItems { nodes { ... } }
-- Apollo Client uses typed generics: apolloClient.query<ResponseType>({ query }) for proper TypeScript inference
-- GraphQL data from PostGraphile stores entity data in `payload` JSONB column; transform functions needed to map to frontend types
+- NestJS apps need `root: true` in `.eslintrc.js` and must be added to root `.prettierignore` and `.eslintrc.js` ignorePatterns (root config doesn't support decorators)
+- `.env.local` is gitignored by default - use `.env.example` for committed env template
+- TypeORM config uses `SnakeNamingStrategy` for PostgreSQL column naming conventions
+- Use `dotenv.config({ path: path.join(__dirname, '../../.env.local') })` in CLI scripts and `'../.env.local'` in main.ts
+- Entity registry pattern: centralize all entities in `src/config/entities.ts`
+- PostGraphile auto-converts snake_case to camelCase in GraphQL (board_state -> boardState)
+- PostGraphile mutation input types: `CreateGameInput` has `game: {}` wrapper, `UpdateGameByIdInput` has `id` + `gamePatch: {...}`
+- JSONB columns accept JSON variables directly in PostGraphile mutations (use GraphQL variables, not inline objects)
+- Use `app.enableCors()` in NestJS main.ts for cross-origin frontend requests
+- Frontend port assignments: realty-ai=2024, tictactoe=2025; Backend: realty-ai-api=3001, tictactoe-api=3002
+- Next.js frontend apps need at least `src/app/page.tsx` and `src/app/layout.tsx` for typecheck to work
+- Zod v4 `.refine()` second arg must be string or `{ message: string }` object, NOT a function (differs from v3)
+- LangGraph pattern: Annotation.Root state → node functions returning Partial<State> → StateGraph with addNode/addEdge → compile
+- DeepSeek-R1 wraps reasoning in `<think>...</think>` tags - strip before parsing LLM output
 
 ---
 
-## 2026-01-24 19:21:00 - US-001
-- What was implemented:
-  - Created apps/realty-ai-api/package.json with NestJS 8.x dependencies
-  - Created npm scripts: dev, build, start, typeorm:migration:new, typeorm:migration:run, migration, seed
-  - Created tsconfig.json with decorator support and @/* path alias
-  - Created nest-cli.json
-  - Created .env.example and .env.local with database credentials
-  - Created minimal src/main.ts and src/app.module.ts for typecheck verification
-  - Created app-level .eslintrc.js for NestJS decorator support
+## 2026-02-26 - US-001
+- What was implemented: Backend project scaffolding for tictactoe-api
 - Files changed:
-  - apps/realty-ai-api/package.json (new)
-  - apps/realty-ai-api/tsconfig.json (new)
-  - apps/realty-ai-api/nest-cli.json (new)
-  - apps/realty-ai-api/.env.example (new)
-  - apps/realty-ai-api/.env.local (new)
-  - apps/realty-ai-api/.eslintrc.js (new)
-  - apps/realty-ai-api/src/main.ts (new)
-  - apps/realty-ai-api/src/app.module.ts (new)
-  - .eslintrc.js (modified - added ignorePatterns for api app)
-  - .prettierignore (modified - added api app)
-  - pnpm-lock.yaml (modified)
+  - apps/tictactoe-api/package.json (NestJS deps, scripts)
+  - apps/tictactoe-api/tsconfig.json, tsconfig.build.json, nest-cli.json
+  - apps/tictactoe-api/.eslintrc.js (root: true for decorator support)
+  - apps/tictactoe-api/docker-compose.yml (postgres:16 on port 54322)
+  - apps/tictactoe-api/.env.local, .env.example
+  - apps/tictactoe-api/src/config/entities.ts (empty array placeholder)
+  - Root .prettierignore, .eslintrc.js (added tictactoe-api to ignore)
 - **Learnings for future iterations:**
-  - Root eslint/prettier configs in this monorepo don't support TypeScript decorators
-  - Must add NestJS apps to .prettierignore and eslintrc ignorePatterns
-  - App needs its own .eslintrc.js with `root: true` and parserOptions.project pointing to local tsconfig
-  - Database credentials: host=localhost, port=54320, user=dtxs1, password=password, db=realty-ai
+  - .env.local is gitignored - don't try to `git add` it
+  - pnpm install succeeds with peer dep warnings for postgraphile-nest (expects NestJS ^7 but we use ^8) - this is fine, same as realty-ai-api
+  - Need at least one .ts file in src/ for typecheck to work (created entities.ts early)
 ---
 
-## 2026-01-24 20:45:00 - US-002
-- What was implemented:
-  - Created apps/realty-ai-api/docker-compose.yml with postgres:16-alpine image
-  - PostgreSQL configured on port 54320 with postgres/docker credentials
-  - Added realty_ai_pgdata volume for data persistence
-  - Added docker:up and docker:down scripts to package.json
+## 2026-02-26 - US-002
+- What was implemented: Database configuration utilities for TypeORM and PostGraphile
 - Files changed:
-  - apps/realty-ai-api/docker-compose.yml (new)
-  - apps/realty-ai-api/package.json (modified - added docker scripts)
+  - apps/tictactoe-api/src/config/postgres.ts (getConfig, getAdminConfig, getClient with port 54322 and db 'tictactoe')
+  - apps/tictactoe-api/src/config/typeorm.ts (getTypeOrmConfig, getTypeOrmModuleConfig with SnakeNamingStrategy, default DataSource export for CLI)
+  - apps/tictactoe-api/src/config/graphile.ts (postgraphileConfigFactory for PostGraphile NestJS integration)
 - **Learnings for future iterations:**
-  - There's already a shared PostgreSQL container `pg` running on port 54320
-  - The existing container uses different credentials (dtxs1/password) than the docker-compose (postgres/docker)
-  - The .env.local references dtxs1 credentials which work with the existing shared container
-  - docker-compose.yml was created per PRD spec but would conflict if run alongside existing pg container
+  - entities.ts was already created in US-001 scaffolding - no need to recreate it
+  - typeorm.ts dotenv.config() path uses `__dirname + '../../.env.local'` since the file is in src/config/
+  - graphile.ts is identical to realty-ai-api version - no project-specific changes needed
 ---
 
-## 2026-01-24 21:15:00 - US-003
-- What was implemented:
-  - Created src/config/postgres.ts with getConfig(), getAdminConfig(), getClient() functions
-  - Created src/config/typeorm.ts with TypeORM DataSourceOptions using SnakeNamingStrategy
-  - Created src/config/roles.ts with DbRoles enum (Author, Anon, Super)
-  - Created src/config/nest.ts with NestJS application options
-  - Added @types/pg devDependency for TypeScript support
+## 2026-02-26 - US-003
+- What was implemented: Game entity with TypeORM decorators and type exports
 - Files changed:
-  - apps/realty-ai-api/src/config/postgres.ts (new)
-  - apps/realty-ai-api/src/config/typeorm.ts (new)
-  - apps/realty-ai-api/src/config/roles.ts (new)
-  - apps/realty-ai-api/src/config/nest.ts (new)
-  - apps/realty-ai-api/package.json (modified - added @types/pg)
-  - pnpm-lock.yaml (modified)
+  - apps/tictactoe-api/src/modules/game/game.entity.ts (Game entity with id, boardState, status, winner, moves, createdAt, updatedAt; CellValue, GameMove, GameStatus type exports)
+  - apps/tictactoe-api/src/config/entities.ts (added Game to entity registry)
 - **Learnings for future iterations:**
-  - TypeORM 0.3.x uses DataSource and DataSourceOptions instead of Connection/ConnectionOptions
-  - The typeorm.ts exports a default DataSource for CLI usage (migrations) and getTypeOrmModuleConfig() for NestJS module
-  - Need @types/pg for pg Client type definitions
-  - postgres.ts provides low-level pg Client access, useful for raw SQL operations
+  - JSONB column defaults must be plain JS values (arrays/objects), TypeORM handles serialization
+  - SnakeNamingStrategy auto-converts camelCase property names to snake_case column names, but explicit `name` in @Column/@CreateDateColumn is still best practice for clarity
+  - Game module directory was pre-created in US-001 scaffolding as empty dir
 ---
 
-## 2026-01-24 19:32:00 - US-004
-- What was implemented:
-  - Added dotenv dependency for environment variable loading
-  - Updated src/main.ts to load .env.local file at startup
-  - Created src/cli/test-connection.ts script to verify database connectivity
-  - Added typecheck and test:db scripts to package.json
-  - Created tsconfig.build.json required by NestJS CLI
+## 2026-02-26 - US-004
+- What was implemented: NestJS application bootstrap (app.service, app.controller, app.module, main.ts)
 - Files changed:
-  - apps/realty-ai-api/package.json (modified - added dotenv, typecheck, test:db scripts)
-  - apps/realty-ai-api/src/main.ts (modified - added dotenv loading)
-  - apps/realty-ai-api/src/cli/test-connection.ts (new)
-  - apps/realty-ai-api/tsconfig.build.json (new)
-  - pnpm-lock.yaml (modified)
+  - apps/tictactoe-api/src/app.service.ts (getRoot returns {message: 'TicTacToe API'}, getHealth returns {status: 'ok'})
+  - apps/tictactoe-api/src/app.controller.ts (GET / and GET /health endpoints)
+  - apps/tictactoe-api/src/app.module.ts (TypeOrmModule.forRoot + PostGraphileModule.forRootAsync)
+  - apps/tictactoe-api/src/main.ts (bootstrap on port 3002 with dotenv from .env.local)
 - **Learnings for future iterations:**
-  - NestJS CLI requires tsconfig.build.json to run `nest start --watch`
-  - dotenv/config only loads .env, not .env.local - need to use dotenv.config() with explicit path
-  - For CLI scripts, use path.join(__dirname, '../../.env.local') from src/cli/
-  - For main.ts, use path.join(__dirname, '../.env.local') since it's in src/
-  - pnpm test:db can be used to verify database connectivity before running the full API
+  - Files were already committed in prior iteration but PRD wasn't updated - always update PRD after commit
+  - main.ts dotenv path uses `path.join(__dirname, '../.env.local')` (relative to dist/ at runtime)
+  - PostGraphileModule.forRootAsync uses empty imports/inject arrays with postgraphileConfigFactory
 ---
 
-## 2026-01-24 21:45:00 - US-005
-- What was implemented:
-  - Created src/modules/property/property.entity.ts with TypeORM entity
-  - Entity has columns: id (uuid PK), type (varchar), name (varchar), slug (varchar nullable), payload (jsonb), meta (jsonb), createdAt, updatedAt
-  - Created PropertyPayload interface with: address, city, state, price, beds, baths, sqft, property_type, highlights[], neighborhood_description
-  - Created PropertyMeta interface for flexible metadata storage
-  - Entity uses @Entity('property') decorator
+## 2026-02-26 - US-005
+- What was implemented: Database migration and seed data (retroactively marking as passed - was committed prior)
 - Files changed:
-  - apps/realty-ai-api/src/modules/property/property.entity.ts (new)
+  - apps/tictactoe-api/src/migrations/1772154510409-CreateGame.ts (TypeORM migration for game table)
+  - apps/tictactoe-api/src/cli/seed.ts (inserts 2 sample games)
+  - apps/tictactoe-api/src/cli/migration.ts (cleanup utility placeholder)
 - **Learnings for future iterations:**
-  - TypeORM entity uses @CreateDateColumn and @UpdateDateColumn for automatic timestamp management
-  - JSONB columns should have explicit interface types for TypeScript type safety
-  - Use `name: 'created_at'` in decorator to set snake_case column names (SnakeNamingStrategy handles this but explicit is clearer)
-  - Entity pattern: id (uuid), type, name, slug, payload (JSONB), meta (JSONB), timestamps
+  - Migration filename includes timestamp prefix for ordering
+  - Seed script and migration were committed together in same story
 ---
 
-## 2026-01-24 22:00:00 - US-006
-- What was implemented:
-  - Created src/modules/client/client.entity.ts with TypeORM entity
-  - Entity has columns: id (uuid PK), type (varchar), name (varchar), email (varchar indexed), slug (varchar nullable), payload (jsonb), meta (jsonb), createdAt, updatedAt
-  - Created ClientPayload interface with: buying_stage, preferences[], budget_range, lifestyle_notes, communication_style
-  - Created ClientMeta interface for flexible metadata storage
-  - Entity uses @Entity('client') decorator
-  - Added @Index() decorator on email column for lookup performance
+## 2026-02-26 - US-006
+- What was implemented: Verified PostGraphile GraphQL API and enabled CORS
 - Files changed:
-  - apps/realty-ai-api/src/modules/client/client.entity.ts (new)
+  - apps/tictactoe-api/src/main.ts (added `app.enableCors()`)
 - **Learnings for future iterations:**
-  - Client entity follows same pattern as Property entity: id, type, name, slug, payload, meta, timestamps
-  - Use @Index() decorator from TypeORM for column indexes (email for client lookups)
-  - Entity pattern is consistent across modules - copy Property structure and adapt payload interface
+  - PostGraphile generates allGames { nodes { ... } } connection pattern automatically
+  - createGame mutation accepts `input: { game: {} }` with empty game object for defaults
+  - updateGameById mutation uses `input: { id: UUID, gamePatch: { ... } }` pattern
+  - JSONB fields (boardState, moves) accept JSON directly via GraphQL variables (not inline)
+  - GraphQL field names are auto-camelCased from snake_case DB columns
 ---
 
-## 2026-01-24 22:15:00 - US-007
-- What was implemented:
-  - Created src/config/entities.ts exporting entities array with Property and Client entities
-  - Updated src/config/typeorm.ts to import entities from entities.ts instead of using glob patterns
-  - Both getTypeOrmConfig() and getTypeOrmModuleConfig() now use the centralized entity registry
+## 2026-02-26 - US-007
+- What was implemented: Frontend project scaffolding for tictactoe Next.js app
 - Files changed:
-  - apps/realty-ai-api/src/config/entities.ts (new)
-  - apps/realty-ai-api/src/config/typeorm.ts (modified - imports entities from entities.ts)
+  - apps/tictactoe/package.json (Next.js 14, React 18, Tailwind, LangChain, Apollo Client, shadcn/ui deps)
+  - apps/tictactoe/tsconfig.json (extending @boilertowns-example/tsconfig/web.json with @/* path alias)
+  - apps/tictactoe/next.config.js, postcss.config.js, tailwind.config.ts (copied from realty-ai)
+  - apps/tictactoe/.env.local (Bedrock creds + NEXT_PUBLIC_GRAPHQL_URL)
+  - apps/tictactoe/.env.example (template without secrets)
+  - apps/tictactoe/src/app/page.tsx, layout.tsx (minimal placeholders for typecheck)
+  - pnpm-lock.yaml (updated with new workspace package)
 - **Learnings for future iterations:**
-  - Using explicit entity imports vs glob patterns provides better TypeScript type safety
-  - Centralized entity registry in config/entities.ts makes it easy to see all registered entities
-  - When adding new entities, register them in entities.ts rather than relying on glob patterns
+  - .env.local is gitignored - won't be committed (same as backend pattern)
+  - Need at least page.tsx and layout.tsx in src/app/ for Next.js and typecheck to work
+  - Dev runs on port 2025 (realty-ai uses 2024, tictactoe-api uses 3002)
+  - Removed @aws-sdk/client-bedrock-runtime, @langchain/community, promptfoo, weather deps from realty-ai deps
+  - Peer dep warnings are expected and non-blocking (same as other workspace packages)
 ---
 
-## 2026-01-24 22:45:00 - US-008
-- What was implemented:
-  - Generated InitialSchema migration using pnpm typeorm:migration:new
-  - Migration creates property table with columns: id, type, name, slug, payload, meta, created_at, updated_at
-  - Migration creates client table with columns: id, type, name, email, slug, payload, meta, created_at, updated_at
-  - Migration creates IDX_6436cc6b79593760b9ef921ef1 index on client.email
-  - Created src/cli/migration.ts as placeholder for cleanup utility
-  - Updated typeorm.ts to load dotenv for CLI operations
-  - Fixed package.json scripts to use --project tsconfig.json for ts-node decorator support
-  - Created uuid-ossp extension via docker exec as superuser
-  - Successfully ran pnpm typeorm:migration:run
+## 2026-02-26 - US-008
+- What was implemented: Frontend base files (globals.css, layout.tsx, utils.ts) and shadcn/ui components (button, card, badge, scroll-area)
 - Files changed:
-  - apps/realty-ai-api/src/migrations/1769314817078-InitialSchema.ts (new)
-  - apps/realty-ai-api/src/cli/migration.ts (new)
-  - apps/realty-ai-api/src/config/typeorm.ts (modified - added dotenv loading)
-  - apps/realty-ai-api/package.json (modified - fixed typeorm scripts)
+  - apps/tictactoe/src/app/globals.css (Tailwind base + CSS variables for light/dark themes)
+  - apps/tictactoe/src/app/layout.tsx (updated with Metadata type, globals.css import, Tailwind body classes)
+  - apps/tictactoe/src/lib/utils.ts (cn() utility using clsx + tailwind-merge)
+  - apps/tictactoe/src/components/ui/button.tsx (shadcn/ui Button with variants)
+  - apps/tictactoe/src/components/ui/card.tsx (shadcn/ui Card components)
+  - apps/tictactoe/src/components/ui/badge.tsx (shadcn/ui Badge with variants)
+  - apps/tictactoe/src/components/ui/scroll-area.tsx (shadcn/ui ScrollArea)
 - **Learnings for future iterations:**
-  - TypeORM CLI commands require `--project tsconfig.json` flag to properly load decorators
-  - uuid-ossp extension needs superuser privileges; run: `docker exec pg psql -U postgres -d realty-ai -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'`
-  - TypeORM 0.3.x migration:generate requires `-d src/config/typeorm.ts` to specify data source
-  - The dtxs1 user doesn't have superuser privileges - must create extensions separately
-  - Migration generated is already clean; minimal cleanup needed for simple table creation
+  - shadcn/ui components are self-contained and can be directly copied between Next.js apps without modification
+  - All UI components use @/lib/utils cn() function - must create utils.ts before UI components
+  - globals.css CSS variables define the shadcn/ui theme - required for component styles to work
+  - layout.tsx needs `import './globals.css'` for styles to be applied
 ---
 
-## 2026-01-24 20:25:00 - US-009
-- What was implemented:
-  - Created src/app.service.ts with health check and root endpoint methods
-  - Created src/app.controller.ts with GET / and GET /health endpoints
-  - Updated src/app.module.ts to import TypeOrmModule with getTypeOrmModuleConfig()
-  - Registered AppController and AppService in the module
-  - src/main.ts already existed and bootstraps on port 3001
+## 2026-02-26 - US-009
+- What was implemented: Game types (CellValue, Board, GameMove, GameStatus, GameState, GameSummary) and deterministic game logic functions
 - Files changed:
-  - apps/realty-ai-api/src/app.service.ts (new)
-  - apps/realty-ai-api/src/app.controller.ts (new)
-  - apps/realty-ai-api/src/app.module.ts (modified - added TypeOrmModule, controller, service)
+  - apps/tictactoe/src/types/game.ts (all game type definitions)
+  - apps/tictactoe/src/lib/game/gameLogic.ts (WIN_LINES, checkWinner, isBoardFull, getAvailablePositions, getGameStatus, getCurrentTurn, isValidMove, applyMove, createEmptyBoard, formatBoardForDisplay)
 - **Learnings for future iterations:**
-  - NestJS bootstrap uses TypeOrmModule.forRoot() with config from getTypeOrmModuleConfig()
-  - Health endpoint returns simple {status: 'ok'} for load balancer checks
-  - AppService should be @Injectable() and injected into AppController constructor
-  - pnpm dev starts the server in watch mode; server runs on port 3001
+  - Board type is a 9-element tuple, not an array - use `as Board` when spreading
+  - All game logic functions are pure - no state mutations, always return new values
+  - getCurrentTurn counts X's and O's to determine turn (X goes first, so X count <= O count means X's turn)
+  - formatBoardForDisplay uses '.' for empty cells - this format is used in the LLM prompt
+  - Linter reformats to tabs (project uses tabs, not spaces)
 ---
 
-## 2026-01-24 20:30:00 - US-010
-- What was implemented:
-  - Installed postgraphile@^4.7.0 and postgraphile-nest@^1.0.5 packages
-  - Created src/config/graphile.ts with PostGraphile configuration factory
-  - Registered PostGraphileModule.forRootAsync() in app.module.ts
-  - GraphiQL playground available at http://localhost:3001/graphiql
-  - GraphQL endpoint available at http://localhost:3001/graphql
-  - Verified allProperties and allClients queries work correctly
+## 2026-02-26 - US-010
+- What was implemented: LangGraph AI move pipeline with 6 files for LLM-powered tic-tac-toe move generation
 - Files changed:
-  - apps/realty-ai-api/package.json (modified - added postgraphile dependencies)
-  - apps/realty-ai-api/src/config/graphile.ts (new)
-  - apps/realty-ai-api/src/app.module.ts (modified - added PostGraphileModule)
-  - pnpm-lock.yaml (modified)
+  - apps/tictactoe/src/lib/ai/llm.ts (ChatBedrockConverse instance with DeepSeek-R1, temp 0.7, maxTokens 256)
+  - apps/tictactoe/src/lib/ai/movePrompt.ts (ChatPromptTemplate with system/user messages for move selection)
+  - apps/tictactoe/src/lib/ai/moveValidator.ts (Zod schema for position validation, parseMoveResponse strips <think> tags)
+  - apps/tictactoe/src/lib/ai/graphState.ts (Annotation.Root with board, available_positions, board_display, ai_move)
+  - apps/tictactoe/src/lib/ai/nodes.ts (inputValidationNode, moveGenerationNode with 3 retries, moveValidationNode)
+  - apps/tictactoe/src/lib/ai/moveGraph.ts (StateGraph: START -> inputValidation -> moveGeneration -> moveValidation -> END)
 - **Learnings for future iterations:**
-  - PostGraphile auto-generates full CRUD GraphQL API from PostgreSQL tables
-  - Use postgraphile-nest package for NestJS integration with PostGraphileModule.forRootAsync()
-  - graphile.ts config uses getConfig() from postgres.ts for database connection
-  - GRAPHIQL_ENABLED env var controls whether GraphiQL playground is available
-  - Non-superuser warning about watch fixtures is not critical - just means no live schema reloading
-  - PostGraphile uses connection-based pagination (allProperties { nodes { ... } })
+  - Zod v4 `.refine()` second argument must be a string or options object `{ message: string }`, NOT a function returning a string (v3 pattern doesn't work)
+  - DeepSeek-R1 response content may be string or array of content blocks - must handle both cases
+  - LLM response parsing: strip `<think>...</think>` tags first, then extract digit 0-8
+  - LangGraph StateGraph pattern: define Annotation.Root state, create node functions returning Partial<State>, chain with addNode/addEdge, compile
+  - Linter will reformat long template strings - check committed code matches expected formatting
 ---
 
-## 2026-01-24 - US-011
-- What was implemented:
-  - Created src/cli/seed.ts CLI script for seeding database with mock data
-  - Script inserts 15 properties from mockProperties.ts data
-  - Script inserts 15 clients from mockClients.ts data
-  - Property payload contains: address, city, state, price, beds, baths, sqft, property_type, highlights, neighborhood_description
-  - Client payload contains: buying_stage, preferences, budget_range, lifestyle_notes, communication_style
-  - Added --project tsconfig.json flag to seed script for decorator support
+## 2026-02-26 - US-011
+- What was implemented: AI move API route (POST /api/ai-move) that accepts a board state, validates it, invokes the LangGraph AI move pipeline, and returns the AI's chosen position with updated board
 - Files changed:
-  - apps/realty-ai-api/src/cli/seed.ts (new)
-  - apps/realty-ai-api/package.json (modified - updated seed script)
+  - apps/tictactoe/src/app/api/ai-move/route.ts (new file - POST handler with board validation, game-over check, moveGraph invocation, defense-in-depth move validation, error handling)
 - **Learnings for future iterations:**
-  - TypeORM 0.3.x requires createQueryBuilder().delete().execute() for deleting all records (empty criteria not allowed with delete({}))
-  - Seed script maps flat mock data to entity pattern: entity columns (type, name, slug) + payload (JSONB) + meta (JSONB)
-  - Store original mock ID in meta.originalId for traceability
-  - createSlug() helper normalizes names to URL-friendly slugs
+  - Follow realty-ai generate-email route pattern: try/catch with SyntaxError check for malformed JSON, surface error messages from LLM failures
+  - Board validation uses type guard functions (isValidCellValue, isValidBoard) for clean TypeScript narrowing
+  - AI always plays 'O' - hardcoded in applyMove call since human is always 'X'
+  - Defense in depth: double-check AI move with isValidMove before responding, even though the LangGraph pipeline has its own validation
+  - Linter reformats multi-line imports to single-line and collapses short boolean expressions - run eslint --fix before committing
 ---
 
-## 2026-01-24 - US-012
-- What was implemented:
-  - Installed @apollo/client and graphql dependencies in apps/realty-ai
-  - Created src/lib/graphql/client.ts with Apollo Client configuration
-  - Added NEXT_PUBLIC_GRAPHQL_URL environment variable to .env.example and .env.local
-  - Created src/lib/graphql/queries.ts with GET_ALL_PROPERTIES, GET_ALL_CLIENTS, GET_PROPERTY_BY_ID, GET_CLIENT_BY_ID queries
-  - Created src/lib/graphql/hooks.ts with useProperties() and useClients() hooks that transform GraphQL data to frontend types
-  - Updated PropertySelector and ClientSelector components to accept data as props with loading state
-  - Updated page.tsx to use GraphQL hooks with fallback to mock data if API unavailable
-  - Updated API route to support both mock data IDs and GraphQL UUIDs for email generation
+## 2026-02-26 - US-012
+- What was implemented: GraphQL integration layer with Apollo Client, queries, mutations, transforms, and hooks
 - Files changed:
-  - apps/realty-ai/package.json (modified - added @apollo/client, graphql)
-  - apps/realty-ai/.env.example (modified - added NEXT_PUBLIC_GRAPHQL_URL)
-  - apps/realty-ai/src/lib/graphql/client.ts (new)
-  - apps/realty-ai/src/lib/graphql/queries.ts (new)
-  - apps/realty-ai/src/lib/graphql/hooks.ts (new)
-  - apps/realty-ai/src/components/PropertySelector.tsx (modified - accepts properties prop)
-  - apps/realty-ai/src/components/ClientSelector.tsx (modified - accepts clients prop)
-  - apps/realty-ai/src/app/page.tsx (modified - uses GraphQL hooks)
-  - apps/realty-ai/src/app/api/generate-email/route.ts (modified - supports UUID lookups)
-  - pnpm-lock.yaml (modified)
+  - apps/tictactoe/src/lib/graphql/client.ts (Apollo Client with HttpLink to localhost:3002/graphql, cache-and-network/network-only policies)
+  - apps/tictactoe/src/lib/graphql/queries.ts (GET_ALL_GAMES with CREATED_AT_DESC ordering, GET_GAME_BY_ID)
+  - apps/tictactoe/src/lib/graphql/mutations.ts (CREATE_GAME with CreateGameInput, UPDATE_GAME with UpdateGameByIdInput)
+  - apps/tictactoe/src/lib/graphql/transforms.ts (GraphQLGameNode type, transformGameToSummary function)
+  - apps/tictactoe/src/lib/graphql/hooks.ts (useGameHistory hook with games/loading/error/refetch)
 - **Learnings for future iterations:**
-  - Apollo Client query() returns { data } which may be undefined; use optional chaining: result.data?.allProperties?.nodes
-  - PostGraphile stores entity-specific data in `payload` JSONB column; need transform functions to flatten to frontend types
-  - Frontend gracefully falls back to mock data when GraphQL API is unavailable
-  - API route checks for UUID format to determine whether to lookup in mock data or GraphQL
-  - Use typed generics with Apollo: apolloClient.query<ResponseType>({ query }) for TypeScript safety
+  - Apollo Client pattern is identical to realty-ai except for port (3002 vs 3001)
+  - useGameHistory exposes a `refetch` function so the game page can refresh history after saving a completed game
+  - GraphQLGameNode type maps PostGraphile's camelCase fields (boardState, createdAt) to frontend types
+  - transformGameToSummary handles null winner and missing moves array gracefully with nullish coalescing
+---
+
+## 2026-02-26 - US-013
+- What was implemented: Game board UI components - Cell, GameBoard, GameStatus, and NewGameButton
+- Files changed:
+  - apps/tictactoe/src/components/Cell.tsx (clickable 96x96px button showing X/O/empty, hover state, disabled logic)
+  - apps/tictactoe/src/components/GameBoard.tsx (3x3 CSS grid of Cell components with onCellClick callback)
+  - apps/tictactoe/src/components/GameStatus.tsx (contextual messages with status-specific colors and animate-pulse for AI thinking)
+  - apps/tictactoe/src/components/NewGameButton.tsx (outline Button that triggers onClick to reset game)
+- **Learnings for future iterations:**
+  - Cell uses h-24 w-24 for 96px sizing (Tailwind's h-24/w-24 = 6rem = 96px)
+  - GameBoard disables all cells via a single `disabled` prop - game-over and AI-thinking states are handled by the parent
+  - GameStatus uses a Record<GameStatusType, {text, className}> mapping for clean status-to-message lookup
+  - No browser testing tools available - manual browser verification needed
+---
+
+## 2026-02-26 - US-014
+- What was implemented: Game history sidebar components - GameHistoryItem and GameHistorySidebar
+- Files changed:
+  - apps/tictactoe/src/components/GameHistoryItem.tsx (displays date/time with short format, move count, result Badge with Win/Loss/Draw variants)
+  - apps/tictactoe/src/components/GameHistorySidebar.tsx (Card with Game History header, ScrollArea at h-[400px], loading/empty states)
+- **Learnings for future iterations:**
+  - GameHistorySidebar takes `games` and `loading` as props from the parent (not using the hook directly) - keeps it a presentational component
+  - Badge variants map: x_wins=default (green), o_wins=destructive (red), draw=secondary (gray)
+  - Date formatting uses toLocaleDateString with month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+  - No browser testing tools available - manual browser verification needed
+---
+
+## 2026-02-26 - US-015
+- What was implemented: Main game page (page.tsx) with full game state management, AI integration, and game history persistence
+- Files changed:
+  - apps/tictactoe/src/app/page.tsx (rewrote from placeholder to full 'use client' component with useState GameState, handleCellClick with human+AI moves, handleNewGame reset, saveCompletedGame via GraphQL mutation, 2-column layout with game board and history sidebar)
+- **Learnings for future iterations:**
+  - Game status must be checked after BOTH human move and AI response - human can win/draw before AI plays
+  - isAiThinking flag prevents double-clicks during API call by disabling board and guarding handleCellClick
+  - saveCompletedGame is fire-and-forget (try/catch with console.error only) - failed saves don't break the game UX
+  - Frontend is source of truth for in-progress games; backend only receives completed games via createGame mutation
+  - API route returns `{ position, board }` - use the returned board directly rather than recomputing
+  - Layout: md:grid-cols-3 with game area at md:col-span-2 and sidebar at col-span-1
+  - No browser testing tools available - manual browser verification needed
 ---

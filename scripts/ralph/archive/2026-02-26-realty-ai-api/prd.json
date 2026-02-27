@@ -104,7 +104,7 @@
 				"Typecheck passes"
 			],
 			"priority": 6,
-			"passes": true,
+			"passes": false,
 			"notes": "PostGraphile auto-generates CRUD from tables. Uses connection pattern: allGames { nodes { ... } }. JSONB columns accept JSON directly through GraphQL. Verify exact mutation input types in GraphiQL."
 		},
 		{
@@ -123,7 +123,7 @@
 				"Typecheck passes"
 			],
 			"priority": 7,
-			"passes": true,
+			"passes": false,
 			"notes": "Copy .env.local Bedrock credentials from realty-ai/.env.local. Dependencies needed: @langchain/aws, @langchain/core, @langchain/langgraph, @apollo/client, graphql, zod, tailwindcss, class-variance-authority, clsx, tailwind-merge, lucide-react, @radix-ui/react-scroll-area, @radix-ui/react-slot."
 		},
 		{
@@ -139,7 +139,7 @@
 				"Typecheck passes"
 			],
 			"priority": 8,
-			"passes": true,
+			"passes": false,
 			"notes": "These are self-contained shadcn/ui components with no project-specific logic. Direct copy from realty-ai."
 		},
 		{
@@ -154,7 +154,7 @@
 				"Typecheck passes"
 			],
 			"priority": 9,
-			"passes": true,
+			"passes": false,
 			"notes": "Board is a flat 9-element array. Indices 0-8 map left-to-right, top-to-bottom. X always goes first. formatBoardForDisplay shows '.' for empty, 'X'/'O' for played cells in a 3x3 text grid."
 		},
 		{
@@ -171,7 +171,7 @@
 				"Typecheck passes"
 			],
 			"priority": 10,
-			"passes": true,
+			"passes": false,
 			"notes": "Follow patterns from realty-ai/src/lib/ai/emailGraph.ts (StateGraph), nodes.ts (retry logic with MAX_GENERATION_ATTEMPTS=3), graphState.ts (Annotation.Root). DeepSeek-R1 wraps reasoning in <think>...</think> tags that must be stripped before parsing. Response content may be string or array of content blocks."
 		},
 		{
@@ -190,7 +190,7 @@
 				"Typecheck passes"
 			],
 			"priority": 11,
-			"passes": true,
+			"passes": false,
 			"notes": "Follow pattern from realty-ai/src/app/api/generate-email/route.ts. Import game logic functions for validation. Apply AI move to board before returning updated board in response."
 		},
 		{
@@ -206,7 +206,7 @@
 				"Typecheck passes"
 			],
 			"priority": 12,
-			"passes": true,
+			"passes": false,
 			"notes": "PostGraphile converts snake_case to camelCase in GraphQL (board_state -> boardState). Auto-generated types: CreateGameInput has game: {...} wrapper, UpdateGameByIdInput has id + gamePatch: {...}. Follow pattern from realty-ai/src/lib/graphql/. Apollo Client uses typed generics for TypeScript safety."
 		},
 		{
@@ -222,7 +222,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 13,
-			"passes": true,
+			"passes": false,
 			"notes": "Use cn() from lib/utils for conditional classNames. Import Button from components/ui/button. Cell uses Tailwind classes for sizing and colors. GameBoard uses CSS grid (grid-cols-3)."
 		},
 		{
@@ -236,7 +236,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 14,
-			"passes": true,
+			"passes": false,
 			"notes": "Import Card, CardHeader, CardTitle, CardContent from components/ui/card. Import Badge from components/ui/badge. Import ScrollArea from components/ui/scroll-area. Date formatting: toLocaleDateString with month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'."
 		},
 		{
@@ -255,7 +255,7 @@
 				"Verify in browser: play a full game to completion, verify history sidebar updates"
 			],
 			"priority": 15,
-			"passes": true,
+			"passes": false,
 			"notes": "Import all components, gameLogic functions, useGameHistory hook, apolloClient, and mutations. Game status checks after BOTH human and AI moves (human could win before AI plays). isAiThinking flag prevents clicks during API call. Frontend is source of truth for in-progress game; backend only receives completed games."
 		}
 	]
