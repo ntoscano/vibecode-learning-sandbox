@@ -3,15 +3,15 @@ import {
 	getAvailablePositions,
 	getGameStatus,
 	isValidMove,
-} from '@/lib/game/gameLogic';
-import type { MoveGraphStateType } from './graphState';
+} from '../../lib/game/gameLogic';
+import type { MoveGraphStateType } from './graph-state';
 import { llm } from './llm';
-import { movePromptTemplate } from './movePrompt';
+import { movePromptTemplate } from './move-prompt';
 import {
 	parseMoveFromReasoning,
 	parseMoveResponse,
 	validateMove,
-} from './moveValidator';
+} from './move-validator';
 
 const MAX_GENERATION_ATTEMPTS = 3;
 

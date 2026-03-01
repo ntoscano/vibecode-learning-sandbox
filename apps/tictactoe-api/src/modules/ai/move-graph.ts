@@ -1,5 +1,5 @@
 import { END, START, StateGraph } from '@langchain/langgraph';
-import { MoveGraphState } from './graphState';
+import { MoveGraphState } from './graph-state';
 import {
 	inputValidationNode,
 	moveGenerationNode,

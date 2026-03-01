@@ -20,22 +20,4 @@ export interface GameMove {
 
 export type GameStatus = 'in_progress' | 'x_wins' | 'o_wins' | 'draw';
 
-export interface GameState {
-	id: string | null;
-	board: Board;
-	status: GameStatus;
-	winner: CellValue;
-	moves: GameMove[];
-	isAiThinking: boolean;
-}
-
 export type GameMode = 'ai' | 'pvp';
-
-export interface GameSummary {
-	id: string;
-	status: GameStatus;
-	winner: CellValue;
-	moveCount: number;
-	mode: GameMode;
-	createdAt: string;
-}

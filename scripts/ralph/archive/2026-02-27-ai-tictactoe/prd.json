@@ -15,7 +15,7 @@
 				"Typecheck passes"
 			],
 			"priority": 1,
-			"passes": true,
+			"passes": false,
 			"notes": "Entity file: apps/tictactoe-api/src/modules/game/game.entity.ts. Use SnakeNamingStrategy (camelCase in TS -> snake_case in DB). Truncate via migration up() before ALTER TABLE."
 		},
 		{
@@ -30,7 +30,7 @@
 				"Typecheck passes"
 			],
 			"priority": 2,
-			"passes": true,
+			"passes": false,
 			"notes": "Source: apps/tictactoe/src/lib/game/gameLogic.ts and apps/tictactoe/src/types/game.ts. Functions are pure with zero framework dependencies — only import path changes needed."
 		},
 		{
@@ -52,7 +52,7 @@
 				"Typecheck passes"
 			],
 			"priority": 3,
-			"passes": true,
+			"passes": false,
 			"notes": "Use @Controller('api/games') prefix. Use TypeORM Repository<Game> injected via constructor. Generate UUID with crypto.randomUUID() or uuid package. Do NOT expose player tokens in GameStateDto — return playerToken as a separate top-level field in the response."
 		},
 		{
@@ -66,7 +66,7 @@
 				"Typecheck passes"
 			],
 			"priority": 4,
-			"passes": true,
+			"passes": false,
 			"notes": "Add getGame() method to GameService and @Get(':id') to GameController. Use repository.findOne({ where: { id } }) with NotFoundException."
 		},
 		{
@@ -88,7 +88,7 @@
 				"Typecheck passes"
 			],
 			"priority": 5,
-			"passes": true,
+			"passes": false,
 			"notes": "Use TypeORM EntityManager.transaction() with queryRunner for SELECT ... FOR UPDATE. Import game logic functions from src/lib/game/gameLogic. Board is stored as JSONB — cast to Board type. AI integration and token validation are separate stories."
 		},
 		{
@@ -102,7 +102,7 @@
 				"Typecheck passes"
 			],
 			"priority": 6,
-			"passes": true,
+			"passes": false,
 			"notes": "Use repository.find({ order: { createdAt: 'DESC' }, take: limit }). Add @Get() with @Query('limit') param to GameController."
 		},
 		{
@@ -118,7 +118,7 @@
 				"Typecheck passes"
 			],
 			"priority": 7,
-			"passes": true,
+			"passes": false,
 			"notes": "Add joinGame() to GameService and @Post(':id/join') to GameController."
 		},
 		{
@@ -137,7 +137,7 @@
 				"Typecheck passes"
 			],
 			"priority": 8,
-			"passes": true,
+			"passes": false,
 			"notes": "Source files: apps/tictactoe/src/lib/ai/moveGraph.ts, nodes.ts, graphState.ts, moveValidator.ts, llm.ts, movePrompt.ts. Zod v4 .refine() second arg must be string or { message: string }, not function. DeepSeek-R1 uses <think>...</think> tags. llm.ts maxTokens is 2048."
 		},
 		{
@@ -155,7 +155,7 @@
 				"Typecheck passes"
 			],
 			"priority": 9,
-			"passes": true,
+			"passes": false,
 			"notes": "Inject AiService into GameService. AI always plays O. The response bundles both moves so frontend gets complete state in one round trip."
 		},
 		{
@@ -171,7 +171,7 @@
 				"Typecheck passes"
 			],
 			"priority": 10,
-			"passes": true,
+			"passes": false,
 			"notes": "Read token from request headers: @Headers('x-player-token') in controller, pass to service. Add token param to makeMove() service method."
 		},
 		{
@@ -188,7 +188,7 @@
 				"Typecheck passes"
 			],
 			"priority": 11,
-			"passes": true,
+			"passes": false,
 			"notes": "Simple fetch wrappers. No Apollo Client — these are REST endpoints, not GraphQL. Add NEXT_PUBLIC_API_URL=http://localhost:3002 to apps/tictactoe/.env.local."
 		},
 		{
@@ -208,7 +208,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 12,
-			"passes": true,
+			"passes": false,
 			"notes": "Use existing GameBoard, GameStatus, NewGameButton, Cell components. State shape similar to current page.tsx but driven by API responses instead of local game logic. localStorage key format: playerToken-{gameId}."
 		},
 		{
@@ -225,7 +225,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 13,
-			"passes": true,
+			"passes": false,
 			"notes": "This replaces the current page.tsx which manages game state locally. The new version is much simpler — just creates a game and redirects."
 		},
 		{
@@ -243,7 +243,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 14,
-			"passes": true,
+			"passes": false,
 			"notes": "Use navigator.clipboard.writeText() for copy. Show a 'Copied!' confirmation briefly."
 		},
 		{
@@ -262,7 +262,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 15,
-			"passes": true,
+			"passes": false,
 			"notes": "Wrap in Suspense boundary since useSearchParams() requires it in Next.js 14 app router."
 		},
 		{
@@ -281,7 +281,7 @@
 				"App builds successfully: pnpm build (from apps/tictactoe)"
 			],
 			"priority": 16,
-			"passes": true,
+			"passes": false,
 			"notes": "Only safe to do after US-012 and US-013 are complete (new pages don't reference old game logic or AI pipeline). Check for any remaining imports of @/lib/ai/ or @/lib/game/gameLogic."
 		},
 		{
@@ -297,7 +297,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 17,
-			"passes": true,
+			"passes": false,
 			"notes": "File: apps/tictactoe/src/components/GameStatus.tsx. Add mode and playerSide to the props interface. Keep the Record<GameStatus, ...> pattern but branch on mode."
 		},
 		{
@@ -311,7 +311,7 @@
 				"Redis accessible at localhost:6379"
 			],
 			"priority": 18,
-			"passes": true,
+			"passes": false,
 			"notes": "Simple docker-compose addition. No application code changes — just infra. Redis alpine image is ~30MB."
 		},
 		{
@@ -330,7 +330,7 @@
 				"Typecheck passes"
 			],
 			"priority": 19,
-			"passes": true,
+			"passes": false,
 			"notes": "NestJS 8 @WebSocketGateway is stable. Use @WebSocketServer() decorator for Server instance. Redis adapter: createAdapter(ioredis pub, ioredis sub). Inject GameGateway into GameService."
 		},
 		{
@@ -350,7 +350,7 @@
 				"Verify in browser using dev-browser skill: open two tabs with same PvP game, make move in one, verify other updates"
 			],
 			"priority": 20,
-			"passes": true,
+			"passes": false,
 			"notes": "Use socket.io-client: io(url + '/game', { transports: ['websocket'] }). Store socket in useRef. Cleanup in useEffect return."
 		},
 		{
@@ -368,7 +368,7 @@
 				"Typecheck passes"
 			],
 			"priority": 21,
-			"passes": true,
+			"passes": false,
 			"notes": "Two DB connections: PostGraphile (read-only postgraphile_user role) and TypeORM (full-access postgres role). Migration SQL: CREATE ROLE postgraphile_user WITH LOGIN PASSWORD 'postgraphile'; GRANT SELECT ON game TO postgraphile_user;"
 		},
 		{
@@ -384,7 +384,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 22,
-			"passes": true,
+			"passes": false,
 			"notes": "Can be a simple component with two Button variants (default vs outline). Place above or below the game board in /game/[id]/page.tsx."
 		},
 		{
@@ -399,7 +399,7 @@
 				"Verify in browser using dev-browser skill"
 			],
 			"priority": 23,
-			"passes": true,
+			"passes": false,
 			"notes": "File: apps/tictactoe/src/components/GameHistoryItem.tsx. The REST endpoint returns mode field. May need to update useGameHistory hook or create a new hook that uses gameApi.listGames()."
 		}
 	]

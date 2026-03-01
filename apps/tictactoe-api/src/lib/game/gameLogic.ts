@@ -1,4 +1,4 @@
-import { Board, CellValue, GameStatus } from '@/types/game';
+import { Board, CellValue, GameStatus } from './types';
 
 export const WIN_LINES: readonly [number, number, number][] = [
 	[0, 1, 2],

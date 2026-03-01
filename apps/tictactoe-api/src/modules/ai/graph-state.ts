@@ -1,4 +1,4 @@
-import type { Board } from '@/types/game';
+import type { Board } from '../../lib/game/types';
 import { Annotation } from '@langchain/langgraph';
 
 /**
