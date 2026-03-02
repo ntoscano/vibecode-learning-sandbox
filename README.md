@@ -10,6 +10,14 @@ This repo adds the **learning step**. After AI builds your app, you study what i
 
 **You are a junior developer the moment you clone this repo.**
 
+## Why This Approach Works
+
+What this sandbox teaches looks new, but the core idea is not. Professional software teams have always worked this way: you write a specification — a document that describes exactly what to build — and then someone builds it. That process is called **spec-driven development**.
+
+The only thing that has changed is who writes the code. Instead of handing a spec to a team of developers, you hand it to AI. But the hard part — figuring out what to build, defining the requirements, thinking through edge cases — that is still your job. That is the skill that matters.
+
+When you write a PRD in this sandbox, you are not taking a shortcut. You are practicing the same skill that senior engineers, product managers, and startup founders use every day. Vibecoding is spec-driven development with an AI teammate.
+
 ## How It Works
 
 ### Step 1: Dream It

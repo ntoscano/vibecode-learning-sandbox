@@ -4,6 +4,18 @@ A structured learning path for junior developers using the Vibecode Learning San
 
 ---
 
+## Vibecoding Is Spec-Driven Development
+
+Before you start the lessons, there is one idea worth understanding.
+
+This sandbox teaches you to build apps by writing a PRD (a blueprint) and letting AI write the code. That might sound like a new thing, but it is actually how professional software has always been built. The process of writing a detailed spec before building is called **spec-driven development** — and it is one of the most valued skills in the industry.
+
+The people who succeed in software are not always the fastest coders. They are the ones who can clearly define what needs to be built and why. That is exactly what you are practicing here. Whether AI writes the code or a team of engineers does, the spec is what makes it work.
+
+So as you go through this curriculum: take the PRD step seriously. The better you get at describing what you want, the better everything you build will be — with or without AI.
+
+---
+
 ## How to Use This Curriculum
 
 This curriculum is designed to work with Claude Code and this sandbox's learning flow.
