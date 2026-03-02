@@ -1,5 +1,7 @@
 # Realty AI Frontend
 
+> **Note:** This is an advanced example. If you are new to this sandbox, start with the [tictactoe](../tictactoe) app first.
+
 Next.js frontend for the real estate AI application.
 
 ## Prerequisites

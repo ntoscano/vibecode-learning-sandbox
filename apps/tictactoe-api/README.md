@@ -63,3 +63,14 @@ pnpm docker:down  # Stop containers
 | `AI_AWS_BEDROCK_ACCESS_KEY_ID`    | AWS access key              |                      |
 | `AI_AWS_BEDROCK_SECRET_ACCESS_KEY`| AWS secret key              |                      |
 | `AI_AWS_BEDROCK_REGION`           | AWS region                  | `us-east-1`          |
+
+## What You Can Learn From This App
+
+This backend shows how a server works behind the scenes:
+
+- **REST API Design** — Endpoints like `POST /api/games` and `GET /api/games/:id` show how servers receive requests and send responses. See `src/game/game.controller.ts`.
+- **NestJS Patterns** — Modules, controllers, and services show how to organize backend code. Controllers handle requests, services contain the logic, modules wire everything together.
+- **Database with TypeORM** — The `Game` entity (`src/game/game.entity.ts`) defines how data is stored in PostgreSQL. TypeORM translates between TypeScript objects and database rows.
+- **Game Logic** — All the rules (whose turn it is, valid moves, win detection) live on the server, not the frontend. See `src/game/game.service.ts`.
+- **WebSocket Real-Time** — The gateway (`src/game/game.gateway.ts`) pushes updates to connected players instantly, without them having to refresh.
+- **AI Integration** — The AI opponent uses LangGraph and AWS Bedrock to decide its moves. See `src/ai/` for how AI pipelines work.

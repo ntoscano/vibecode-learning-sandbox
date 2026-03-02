@@ -1,5 +1,7 @@
 # Dashboard
 
+> **Starter template.** This is a minimal React app you can use as a base for your own projects.
+
 React dashboard application built with Webpack 5 and Babel.
 
 ## Prerequisites

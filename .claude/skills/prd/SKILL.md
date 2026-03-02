@@ -5,6 +5,10 @@ description: 'Generate a Product Requirements Document (PRD) for a new feature. 
 
 # PRD Generator
 
+**Learning Flow Step 1: Dream It**
+
+This is where the student describes the app they want to build. You help them turn their idea into a structured blueprint (PRD) that can be implemented in the "Vibe It" step.
+
 Create detailed Product Requirements Documents that are clear, actionable, and suitable for implementation.
 
 ---
@@ -68,7 +72,18 @@ Brief description of the feature and the problem it solves.
 
 Specific, measurable objectives (bullet list).
 
-### 3. User Stories
+### 3. Learning Objectives
+
+What concepts will the student encounter by building this? List 3-5 specific things, mapped to real technologies:
+
+- "React state management (useState, useEffect)"
+- "REST API design (endpoints, HTTP methods, status codes)"
+- "Database modeling (tables, columns, relationships)"
+- "CSS layout with Tailwind (flexbox, grid, responsive design)"
+
+This section helps the `/postmortem` and `/feature-challenge` skills focus on the right concepts later.
+
+### 4. User Stories
 
 Each story needs:
 
@@ -102,7 +117,7 @@ Each story should be small enough to implement in one focused session.
   - "Returns 409 if resource is already claimed"
   - "Returns 403 if player token does not match current turn"
 
-### 4. Functional Requirements
+### 5. Functional Requirements
 
 Numbered list of specific functionalities:
 
@@ -111,23 +126,23 @@ Numbered list of specific functionalities:
 
 Be explicit and unambiguous.
 
-### 5. Non-Goals (Out of Scope)
+### 6. Non-Goals (Out of Scope)
 
 What this feature will NOT include. Critical for managing scope.
 
-### 6. Design Considerations (Optional)
+### 7. Design Considerations (Optional)
 
 - UI/UX requirements
 - Link to mockups if available
 - Relevant existing components to reuse
 
-### 7. Technical Considerations (Optional)
+### 8. Technical Considerations (Optional)
 
 - Known constraints or dependencies
 - Integration points with existing systems
 - Performance requirements
 
-### 8. Production Considerations (When Applicable)
+### 9. Production Considerations (When Applicable)
 
 Include this section when the feature involves shared state, user input, or external-facing APIs:
 
@@ -137,14 +152,14 @@ Include this section when the feature involves shared state, user input, or exte
 - **Error Handling:** What are the expected failure cases? What status codes and messages should each return?
 - **Security Boundaries:** Where are the trust boundaries? What should the server never trust from the client?
 
-### 9. Success Metrics
+### 10. Success Metrics
 
 How will success be measured?
 
 - "Reduce time to complete X by 50%"
 - "Increase conversion rate by 10%"
 
-### 10. Open Questions
+### 11. Open Questions
 
 Remaining questions or areas needing clarification.
 
@@ -264,6 +279,17 @@ Add priority levels to tasks so users can focus on what matters most. Tasks can 
 - Should priority affect task ordering within a column?
 - Should we add keyboard shortcuts for priority changes?
 ```
+
+---
+
+## Scoping for Learning
+
+When generating PRDs in this sandbox, keep the following in mind:
+
+- **Start small.** A first PRD should have 3-6 user stories, not 20. The student can always add features later.
+- **If the idea is too ambitious**, suggest a simpler starting point and explain that scoping down is a real engineering skill. "Let's start with the core feature and add the rest in v2."
+- **Every PRD should be completable** by Ralph or direct implementation in a reasonable session.
+- **Favor projects that touch visible concepts** — apps where the student can see something in the browser are more motivating than pure backend work.
 
 ---
 

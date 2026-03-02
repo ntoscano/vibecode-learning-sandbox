@@ -5,6 +5,10 @@ description: "Convert PRDs to prd.json format for the Ralph autonomous agent sys
 
 # Ralph PRD Converter
 
+**Learning Flow Step 2: Vibe It**
+
+Ralph is the autonomous coding agent that implements your PRD. After you create a blueprint in Step 1 (Dream It), Ralph reads it and writes all the code — this is the vibecoding step.
+
 Converts existing PRDs to the prd.json format that Ralph uses for autonomous execution.
 
 ---

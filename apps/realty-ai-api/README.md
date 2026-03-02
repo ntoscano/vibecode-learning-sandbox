@@ -1,5 +1,7 @@
 # Realty AI API
 
+> **Note:** This is an advanced example. If you are new to this sandbox, start with the [tictactoe](../tictactoe) + [tictactoe-api](../tictactoe-api) apps first.
+
 NestJS backend for the real estate AI application. Provides REST endpoints, a PostGraphile GraphQL API for read-only queries, and PostgreSQL with pgvector for vector similarity search.
 
 ## Prerequisites

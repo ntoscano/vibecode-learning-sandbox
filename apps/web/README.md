@@ -1,5 +1,7 @@
 # Web
 
+> **Starter template.** This is a minimal Next.js app you can use as a base for your own projects.
+
 Next.js web application.
 
 ## Prerequisites
