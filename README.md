@@ -31,6 +31,35 @@ Claude generates a **feature challenge** — a guided exercise where YOU write t
 
 Then you go back to Step 1 with a new project. Each time around, you understand more.
 
+## 14-Week Curriculum
+
+Want a structured learning path? We have a **14-week bootcamp curriculum** with 84 lessons that takes you from setting up your tools all the way to building full-stack apps, deploying them, and presenting your portfolio.
+
+Here is what the weeks look like:
+
+| Weeks | Focus |
+|-------|-------|
+| 1-2 | **Getting Set Up** — VS Code, terminal, Git |
+| 3-5 | **Foundations** — JavaScript, HTML, CSS, TypeScript |
+| 6-7 | **Backend** — Node.js, NestJS, databases, APIs |
+| 8-9 | **Frontend Frameworks** — React, Next.js, state management |
+| 10 | **Security, Auth, and Testing** |
+| 11 | **Solo Project Sprint** — build something on your own |
+| 12-13 | **Collaboration and Advanced Topics** — Git workflows, DevOps, deployment |
+| 14 | **Portfolio, Interview Prep, and Capstone** |
+
+Each lesson includes an objective, key concepts, and an exercise type (build from scratch, modify existing code, or study and explain).
+
+**How to use it with Claude:** Copy a lesson into Claude Code and ask for exercises. For example:
+
+```
+You: "Give me exercises for Week 1, Lesson 1"
+You: "I'm working on Week 7, Lesson 4 — can you give me a feature challenge?"
+You: "Explain the concepts from Week 4, Lesson 3 using the tictactoe app"
+```
+
+Go at your own pace — full-time, part-time, or self-paced. See the full curriculum: **[docs/curriculum.md](docs/curriculum.md)**
+
 ## What's Already Here
 
 This repo comes with example apps you can explore and learn from:
@@ -71,7 +100,15 @@ This repo comes with example apps you can explore and learn from:
    ```
    Then open http://localhost:2025 in your browser.
 
-4. Open Claude Code in the repo root and start the learning flow:
+4. Open Claude Code in the repo root and choose your path:
+
+   **Option A: Follow the curriculum** — if you want a structured foundation before building, start with the 14-week curriculum. Tell Claude:
+   ```
+   You: "Give me exercises for Week 1, Lesson 1"
+   ```
+   See the full curriculum: [docs/curriculum.md](docs/curriculum.md)
+
+   **Option B: Start building** — if you want to jump straight into creating an app, start the learning flow:
    ```
    You: "I want to build an app. Can you help me create a PRD?"
    ```
@@ -93,6 +130,7 @@ vibecode-learning-sandbox/
 ├── tasks/                  # PRDs (app blueprints) go here
 ├── scripts/ralph/          # Ralph — the autonomous coding agent
 ├── docs/                   # Documentation
+│   └── curriculum.md       # 14-week bootcamp curriculum (84 lessons)
 └── CLAUDE.md               # Instructions that tell Claude how to help you
 ```
 
@@ -100,7 +138,7 @@ vibecode-learning-sandbox/
 
 This sandbox is designed for self-directed learning, but it works in classroom settings too:
 
-- **No curriculum required** — students choose what to build, and the learning emerges from the concepts used
+- **Structured or freeform** — a [14-week curriculum](docs/curriculum.md) is available for students who want a guided path, or students can choose what to build and let the learning emerge from the concepts used
 - **Built-in guardrails** — Claude switches between "builder" mode and "tutor" mode automatically, so students get the right kind of help at the right time
 - **Tangible output** — students end each cycle with a working app they built (vibecoded), a learning guide they studied, and a feature they coded themselves
 - **Progressive complexity** — a student's first app might use basic HTML and JavaScript; their fifth might use databases and APIs. The sandbox scales with them
@@ -117,3 +155,29 @@ For the curious — here is what powers this monorepo:
 - **Tailwind CSS** — utility-based styling
 - **PostgreSQL** — database
 - **ESLint + Prettier** — keeps code clean and consistent
+
+## Beyond Code — Startups and Career
+
+Learning to code opens two doors: you can build your own thing, or you can get hired to build someone else's. Either way, these resources will help.
+
+### Startups and Entrepreneurship
+
+If you have an idea and want to turn it into a real product, Y Combinator's free resources are the best place to start:
+
+- [Startup School](https://www.startupschool.org/) — YC's free course on founding a startup (7 weeks, 1-2 hrs/week). Covers ideas, MVPs, launching, fundraising, and growth. Taught by YC partners.
+- [Startup School Curriculum](https://www.startupschool.org/curriculum) — the full curriculum outline — good to browse even if you don't take the course
+- [Should You Start a Startup?](https://www.startupschool.org/curriculum/should-you-start-a-startup) — a good first lesson if you're curious but not sure
+- [YC's Essential Startup Advice](https://www.ycombinator.com/library/4D-yc-s-essential-startup-advice) — the core principles YC teaches every batch: launch fast, talk to users, do things that don't scale
+
+### Job Search and Career
+
+If you want to get hired as a developer, start here:
+
+- [Are Junior Devs Screwed?](https://x.com/theo/status/2015877219713941797) — Theo (t3.gg) breaks down the current landscape for junior developers trying to get hired. Honest, data-driven, and practical whether you're hiring or job-hunting.
+
+## Keep Learning
+
+The most important skill you can develop is the ability to teach yourself. It matters more than any single language, framework, or tool. Curiosity and consistency beat credentials every time. These resources are free and open to everyone:
+
+- [MIT OpenCourseWare](https://ocw.mit.edu/) — free lecture notes, videos, and exams from 2,500+ MIT courses. Computer science, math, engineering, and more. No sign-up, no deadlines, completely self-paced.
+- [Harvard Free Courses](https://pll.harvard.edu/catalog/free) — 140+ free courses from Harvard covering programming, data science, business, and beyond.
