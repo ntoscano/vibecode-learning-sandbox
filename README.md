@@ -21,6 +21,7 @@ When you write a PRD in this sandbox, you are not taking a shortcut. You are pra
 ## How It Works
 
 ### Step 1: Dream It
+
 Describe the app you want to build. You work with Claude to create a PRD (Product Requirements Document) — a blueprint that describes exactly what the app should do.
 
 ```
@@ -29,12 +30,15 @@ Claude: *asks clarifying questions, then generates a PRD*
 ```
 
 ### Step 2: Vibe It
+
 Claude reads the blueprint and writes all the code. This is the vibecoding part — you watch a real app come to life from your description.
 
 ### Step 3: Study It
+
 Now the learning starts. Claude generates a **postmortem** — a guide that walks you through everything that was built and explains the concepts: HTML, CSS, JavaScript, React, APIs, databases, and more. Each concept is tied to actual code in your project.
 
 ### Step 4: Own It
+
 Claude generates a **feature challenge** — a guided exercise where YOU write the code to add a new feature to the app. Claude acts as your tutor: giving hints and asking questions, but never writing the code for you.
 
 Then you go back to Step 1 with a new project. Each time around, you understand more.
@@ -45,16 +49,16 @@ Want a structured learning path? We have a **14-week bootcamp curriculum** with 
 
 Here is what the weeks look like:
 
-| Weeks | Focus |
-|-------|-------|
-| 1-2 | **Getting Set Up** — VS Code, terminal, Git |
-| 3-5 | **Foundations** — JavaScript, HTML, CSS, TypeScript |
-| 6-7 | **Backend** — Node.js, NestJS, databases, APIs |
-| 8-9 | **Frontend Frameworks** — React, Next.js, state management |
-| 10 | **Security, Auth, and Testing** |
-| 11 | **Solo Project Sprint** — build something on your own |
+| Weeks | Focus                                                                     |
+| ----- | ------------------------------------------------------------------------- |
+| 1-2   | **Getting Set Up** — VS Code, terminal, Git                               |
+| 3-5   | **Foundations** — JavaScript, HTML, CSS, TypeScript                       |
+| 6-7   | **Backend** — Node.js, NestJS, databases, APIs                            |
+| 8-9   | **Frontend Frameworks** — React, Next.js, state management                |
+| 10    | **Security, Auth, and Testing**                                           |
+| 11    | **Solo Project Sprint** — build something on your own                     |
 | 12-13 | **Collaboration and Advanced Topics** — Git workflows, DevOps, deployment |
-| 14 | **Portfolio, Interview Prep, and Capstone** |
+| 14    | **Portfolio, Interview Prep, and Capstone**                               |
 
 Each lesson includes an objective, key concepts, and an exercise type (build from scratch, modify existing code, or study and explain).
 
@@ -72,12 +76,11 @@ Go at your own pace — full-time, part-time, or self-paced. See the full curric
 
 This repo comes with example apps you can explore and learn from:
 
-| App | What It Is | Start Here? |
-|-----|-----------|-------------|
+| App                                                               | What It Is                                            | Start Here?                           |
+| ----------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------- |
 | [tictactoe](apps/tictactoe) + [tictactoe-api](apps/tictactoe-api) | A tic-tac-toe game with AI opponent and 2-player mode | Yes — this is the best place to start |
-| [realty-ai](apps/realty-ai) + [realty-ai-api](apps/realty-ai-api) | AI-powered real estate email generator | Advanced example |
-| [dashboard](apps/dashboard) | React dashboard starter template | Blank canvas |
-| [web](apps/web) | Next.js web app starter template | Blank canvas |
+| [dashboard](apps/dashboard)                                       | React dashboard starter template                      | Blank canvas                          |
+| [web](apps/web)                                                   | Next.js web app starter template                      | Blank canvas                          |
 
 ## Getting Started
 
@@ -92,39 +95,48 @@ This repo comes with example apps you can explore and learn from:
 ### Setup
 
 1. Fork this repo — this creates your own copy on GitHub so you can save your work:
+
    - Make sure you are signed in to [GitHub](https://github.com/)
    - Go to the top of this repo's page and click the **Fork** button (upper right)
    - On the "Create a new fork" page, leave everything as-is and click **Create fork**
    - You now have your own copy at `github.com/YOUR-USERNAME/vibecode-learning-sandbox`
 
 2. Clone your fork — this downloads the code to your computer:
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/vibecode-learning-sandbox.git
    cd vibecode-learning-sandbox
    ```
+
    Replace `YOUR-USERNAME` with your actual GitHub username.
 
 3. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 4. Run the tictactoe app to see it in action:
+
    ```bash
    cd apps/tictactoe
    pnpm dev
    ```
+
    Then open http://localhost:2025 in your browser.
 
 5. Open Claude Code in the repo root and choose your path:
 
    **Option A: Follow the curriculum** — if you want a structured foundation before building, start with the 14-week curriculum. Tell Claude:
+
    ```
    You: "Give me exercises for Week 1, Lesson 1"
    ```
+
    See the full curriculum: [docs/curriculum.md](docs/curriculum.md)
 
    **Option B: Start building** — if you want to jump straight into creating an app, start the learning flow:
+
    ```
    You: "I want to build an app. Can you help me create a PRD?"
    ```
@@ -136,8 +148,6 @@ vibecode-learning-sandbox/
 ├── apps/                   # All the apps live here
 │   ├── tictactoe/          # Tic-tac-toe game (frontend)
 │   ├── tictactoe-api/      # Tic-tac-toe game (backend server)
-│   ├── realty-ai/          # Real estate AI app (frontend)
-│   ├── realty-ai-api/      # Real estate AI app (backend server)
 │   ├── dashboard/          # Blank starter (React)
 │   └── web/                # Blank starter (Next.js)
 ├── packages/               # Shared code used by multiple apps

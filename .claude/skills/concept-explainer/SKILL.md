@@ -27,38 +27,46 @@ Explains a single programming concept at a beginner-friendly level, using real e
 For every concept, follow this sequence:
 
 ### 1. Analogy
+
 Compare the concept to something in everyday life.
 
 > "A React component is like a LEGO brick — a self-contained piece that you can reuse and combine with other pieces to build something bigger."
 
 ### 2. Definition
+
 One sentence. No jargon. If you must use a technical term, define it inline.
 
 > "It is a function that returns the HTML (the structure and content) for one part of your page."
 
 ### 3. Real Example
+
 Show 2-5 lines of actual code from this codebase. Annotate each line.
 
 > "Look at `apps/tictactoe/src/components/Cell.tsx`:"
+>
 > ```tsx
 > // This is a component called "Cell" — it represents one square on the game board
 > export function Cell({ value, onClick }: CellProps) {
->   // "value" and "onClick" are props — information passed in from the parent
->   return (
->     // When someone clicks this div, the onClick function runs
->     <div onClick={onClick} className="...">{value}</div>
->   );
+> 	// "value" and "onClick" are props — information passed in from the parent
+> 	return (
+> 		// When someone clicks this div, the onClick function runs
+> 		<div onClick={onClick} className="...">
+> 			{value}
+> 		</div>
+> 	);
 > }
 > ```
 
-**Prefer examples from tictactoe apps** (they are the simplest). Fall back to realty-ai apps if the concept is not present in tictactoe.
+**Use examples from the tictactoe apps** (they are the simplest and most complete reference).
 
 ### 4. Why It Matters
+
 Connect the concept to the bigger picture. Why does this exist? What problem does it solve?
 
 > "Without components, you would have to write all your HTML in one giant file. Components let you break your page into small, manageable pieces — and reuse them. The tic-tac-toe board uses 9 Cell components instead of copying the same HTML 9 times."
 
 ### 5. Comprehension Check
+
 Ask one question that nudges the student to explore the codebase themselves.
 
 > "Can you find the component that renders the entire game board? What components does it use inside it?"
@@ -80,14 +88,17 @@ Ask one question that nudges the student to explore the codebase themselves.
 **Student:** "What is state in React?"
 
 **Claude:**
+
 > Think of state like the score on a scoreboard. It is information that can change over time, and when it changes, the scoreboard updates to show the new value.
 >
 > In React, state is data that a component keeps track of. When state changes, React automatically re-renders (redraws) that part of the page.
 >
 > Here is an example from `apps/tictactoe/src/app/page.tsx`:
+>
 > ```tsx
 > const [game, setGame] = useState<Game | null>(null);
 > ```
+>
 > This line creates a piece of state called `game`. It starts as `null` (empty — no game yet). When a game loads, `setGame` is called with the game data, and React redraws the page to show the board.
 >
 > Without state, your page would be frozen — it could never change in response to what the user does.
