@@ -84,31 +84,39 @@ This repo comes with example apps you can explore and learn from:
 ### What You Need
 
 - A computer (Mac, Windows, or Linux)
+- A [GitHub](https://github.com/) account (free) — this is where your code lives online. Sign up if you don't have one yet.
 - [Node.js](https://nodejs.org/) version 16 or higher (download the LTS version)
 - [pnpm](https://pnpm.io/) package manager — install it by running `npm install -g pnpm` in your terminal
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — the AI coding assistant you will work with
 
 ### Setup
 
-1. Clone this repo:
+1. Fork this repo — this creates your own copy on GitHub so you can save your work:
+   - Make sure you are signed in to [GitHub](https://github.com/)
+   - Go to the top of this repo's page and click the **Fork** button (upper right)
+   - On the "Create a new fork" page, leave everything as-is and click **Create fork**
+   - You now have your own copy at `github.com/YOUR-USERNAME/vibecode-learning-sandbox`
+
+2. Clone your fork — this downloads the code to your computer:
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/YOUR-USERNAME/vibecode-learning-sandbox.git
    cd vibecode-learning-sandbox
    ```
+   Replace `YOUR-USERNAME` with your actual GitHub username.
 
-2. Install dependencies:
+3. Install dependencies:
    ```bash
    pnpm install
    ```
 
-3. Run the tictactoe app to see it in action:
+4. Run the tictactoe app to see it in action:
    ```bash
    cd apps/tictactoe
    pnpm dev
    ```
    Then open http://localhost:2025 in your browser.
 
-4. Open Claude Code in the repo root and choose your path:
+5. Open Claude Code in the repo root and choose your path:
 
    **Option A: Follow the curriculum** — if you want a structured foundation before building, start with the 14-week curriculum. Tell Claude:
    ```
