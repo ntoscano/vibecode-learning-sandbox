@@ -142,14 +142,14 @@ vibecode-learning-sandbox/
 └── CLAUDE.md               # Instructions that tell Claude how to help you
 ```
 
-## For Educators
+## For Students
 
-This sandbox is designed for self-directed learning, but it works in classroom settings too:
+Here is what you can expect from this sandbox:
 
-- **Structured or freeform** — a [14-week curriculum](docs/curriculum.md) is available for students who want a guided path, or students can choose what to build and let the learning emerge from the concepts used
-- **Built-in guardrails** — Claude switches between "builder" mode and "tutor" mode automatically, so students get the right kind of help at the right time
-- **Tangible output** — students end each cycle with a working app they built (vibecoded), a learning guide they studied, and a feature they coded themselves
-- **Progressive complexity** — a student's first app might use basic HTML and JavaScript; their fifth might use databases and APIs. The sandbox scales with them
+- **You choose what to build** — follow the [14-week curriculum](docs/curriculum.md) for a guided path, or skip it and build whatever you want. Both work.
+- **You always get the right kind of help** — when you ask Claude to build something, it builds. When you ask it to teach you, it teaches. It switches automatically so you never have to think about it.
+- **You finish with real things** — every cycle gives you a working app, a learning guide that explains what was built, and a feature you coded yourself. Not just theory.
+- **It grows with you** — your first app might be a simple page with a button. A few projects later, you will be building apps with databases and APIs. The sandbox meets you where you are.
 
 ## Tech Stack
 
@@ -189,3 +189,4 @@ The most important skill you can develop is the ability to teach yourself. It ma
 
 - [MIT OpenCourseWare](https://ocw.mit.edu/) — free lecture notes, videos, and exams from 2,500+ MIT courses. Computer science, math, engineering, and more. No sign-up, no deadlines, completely self-paced.
 - [Harvard Free Courses](https://pll.harvard.edu/catalog/free) — 140+ free courses from Harvard covering programming, data science, business, and beyond.
+- [Girls Who Code](https://girlswhocode.com/) — free coding programs for high school students, including a summer Pathways program. No prior experience needed.
