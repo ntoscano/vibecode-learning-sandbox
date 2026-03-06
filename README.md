@@ -87,10 +87,11 @@ This repo comes with example apps you can explore and learn from:
 ### What You Need
 
 - A computer (Mac, Windows, or Linux)
+- A code editor — this is where you view and edit your code. We recommend [VS Code](https://code.visualstudio.com/) (free) or [Cursor](https://www.cursor.com/) (free tier available, has built-in AI features)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — the AI coding assistant you will work with. Once installed, Claude can help you set up everything else below.
 - A [GitHub](https://github.com/) account (free) — this is where your code lives online. Sign up if you don't have one yet.
 - [Node.js](https://nodejs.org/) version 16 or higher (download the LTS version)
 - [pnpm](https://pnpm.io/) package manager — install it by running `npm install -g pnpm` in your terminal
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — the AI coding assistant you will work with
 
 ### Setup
 
