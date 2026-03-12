@@ -10,15 +10,105 @@ This repo adds the **learning step**. After AI builds your app, you study what i
 
 **You are a junior developer the moment you clone this repo.**
 
-## Why This Approach Works
+## Getting Started
 
-What this sandbox teaches looks new, but the core idea is not. Professional software teams have always worked this way: you write a specification — a document that describes exactly what to build — and then someone builds it. That process is called **spec-driven development**.
+### Step 1: Install a Code Editor
 
-The only thing that has changed is who writes the code. Instead of handing a spec to a team of developers, you hand it to AI. But the hard part — figuring out what to build, defining the requirements, thinking through edge cases — that is still your job. That is the skill that matters.
+A code editor is where you view and edit code. Download one of these (both are free):
 
-When you write a PRD in this sandbox, you are not taking a shortcut. You are practicing the same skill that senior engineers, product managers, and startup founders use every day. Vibecoding is spec-driven development with an AI teammate.
+- [VS Code](https://code.visualstudio.com/) — the most popular code editor for developers
+- [Cursor](https://www.cursor.com/) — a code editor with built-in AI features
+
+Once installed, open it. Press `` Ctrl + ` `` (that's the backtick key — the same key as `~`, top-left of your keyboard, below `Esc`) to open the **built-in terminal**. This is where you will type commands for all the steps below.
+
+> **On Mac:** use `` Cmd + ` `` or `` Ctrl + ` `` depending on your editor.
+
+### Step 2: Set Up Claude Code
+
+Claude Code is an AI coding assistant that works directly on your computer. It can read your files, run commands, and build things for you. Once you have it running, it can help you install everything else.
+
+1. Create an Anthropic account at [console.anthropic.com](https://console.anthropic.com)
+2. Follow the [Claude Code installation guide](https://docs.anthropic.com/en/docs/claude-code/overview) — run the install commands in the terminal you opened in Step 1
+
+Verify it worked:
+
+```bash
+claude --version
+```
+
+> **What about other AI tools?** Claude Code is special because it works directly on your computer — it can read your files, run commands, and build things for you. Other AI chats like [ChatGPT](https://chatgpt.com) and [Gemini](https://gemini.google.com) are great for answering questions and explaining concepts, but they cannot do the work on your machine. Use whatever helps you learn, but Claude Code is what powers this sandbox.
+
+### Step 3: Install the Rest
+
+You need a few more tools. Claude Code can help you install these — just ask it! Or follow the links to install them yourself.
+
+| Tool               | What It Is                                            | How to Get It                                                                                             |
+| ------------------ | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Git**            | Tracks changes to code and lets you download projects | [git-scm.com](https://git-scm.com) — Mac users may already have it (try `git --version` in your terminal) |
+| **Node.js**        | Lets your computer run JavaScript                     | [nodejs.org](https://nodejs.org) — download the **LTS** version (the stable one)                          |
+| **pnpm**           | Downloads code libraries your projects need           | After installing Node.js, run: `npm install -g pnpm`                                                      |
+| **GitHub account** | Where your code lives online                          | [github.com](https://github.com) — sign up for free                                                       |
+
+> **Need more help with these steps?** See the detailed [Getting Started guide](docs/getting-started.md) with step-by-step instructions and troubleshooting.
+
+### Step 4: Fork and Clone This Repo
+
+1. **Fork this repo** — this creates your own copy on GitHub so you can save your work:
+
+   - Make sure you are signed in to [GitHub](https://github.com/)
+   - Go to the top of this repo's page and click the **Fork** button (upper right)
+   - On the "Create a new fork" page, leave everything as-is and click **Create fork**
+   - You now have your own copy at `github.com/YOUR-USERNAME/vibecode-learning-sandbox`
+
+2. **Clone your fork** — this downloads the code to your computer:
+
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/vibecode-learning-sandbox.git
+   cd vibecode-learning-sandbox
+   ```
+
+   Replace `YOUR-USERNAME` with your actual GitHub username.
+
+3. **Install dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+4. **Run the tictactoe app** to see it in action:
+
+   ```bash
+   cd apps/tictactoe
+   pnpm dev
+   ```
+
+   Then open http://localhost:2025 in your browser. You should see a tic-tac-toe game!
+
+   To stop the app, go back to your terminal and press `Ctrl + C`. To get back to the main project folder, run `cd ../..`.
+
+### Step 5: Start Learning
+
+Open Claude Code in the repo root and choose your path:
+
+**Option A: Follow the curriculum** — if you want a structured foundation before building, start with the 14-week curriculum. Tell Claude:
+
+```
+You: "Give me exercises for Week 1, Lesson 1"
+```
+
+See the full curriculum: [docs/curriculum.md](docs/curriculum.md)
+
+**Option B: Start building** — if you want to jump straight into creating an app, start the learning flow:
+
+```
+You: "I want to build an app. Can you help me create a PRD?"
+```
+
+> **See unfamiliar terms?** Check the [Glossary](docs/glossary.md) for plain-English definitions of technical words you will encounter.
 
 ## How It Works
+
+This sandbox follows a 4-step learning cycle:
 
 ### Step 1: Dream It
 
@@ -47,8 +137,6 @@ Then you go back to Step 1 with a new project. Each time around, you understand 
 
 Want a structured learning path? We have a **14-week bootcamp curriculum** with 84 lessons that takes you from setting up your tools all the way to building full-stack apps, deploying them, and presenting your portfolio.
 
-Here is what the weeks look like:
-
 | Weeks | Focus                                                                     |
 | ----- | ------------------------------------------------------------------------- |
 | 1-2   | **Getting Set Up** — VS Code, terminal, Git                               |
@@ -59,16 +147,6 @@ Here is what the weeks look like:
 | 11    | **Solo Project Sprint** — build something on your own                     |
 | 12-13 | **Collaboration and Advanced Topics** — Git workflows, DevOps, deployment |
 | 14    | **Portfolio, Interview Prep, and Capstone**                               |
-
-Each lesson includes an objective, key concepts, and an exercise type (build from scratch, modify existing code, or study and explain).
-
-**How to use it with Claude:** Copy a lesson into Claude Code and ask for exercises. For example:
-
-```
-You: "Give me exercises for Week 1, Lesson 1"
-You: "I'm working on Week 7, Lesson 4 — can you give me a feature challenge?"
-You: "Explain the concepts from Week 4, Lesson 3 using the tictactoe app"
-```
 
 Go at your own pace — full-time, part-time, or self-paced. See the full curriculum: **[docs/curriculum.md](docs/curriculum.md)**
 
@@ -82,65 +160,22 @@ This repo comes with example apps you can explore and learn from:
 | [dashboard](apps/dashboard)                                       | React dashboard starter template                      | Blank canvas                          |
 | [web](apps/web)                                                   | Next.js web app starter template                      | Blank canvas                          |
 
-## Getting Started
+## Why This Approach Works
 
-### What You Need
+What this sandbox teaches looks new, but the core idea is not. Professional software teams have always worked this way: you write a specification — a document that describes exactly what to build — and then someone builds it. That process is called **spec-driven development**.
 
-- A computer (Mac, Windows, or Linux)
-- A code editor — this is where you view and edit your code. We recommend [VS Code](https://code.visualstudio.com/) (free) or [Cursor](https://www.cursor.com/) (free tier available, has built-in AI features)
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — the AI coding assistant you will work with. Once installed, Claude can help you set up everything else below.
-- A [GitHub](https://github.com/) account (free) — this is where your code lives online. Sign up if you don't have one yet.
-- [Node.js](https://nodejs.org/) version 16 or higher (download the LTS version)
-- [pnpm](https://pnpm.io/) package manager — install it by running `npm install -g pnpm` in your terminal
+The only thing that has changed is who writes the code. Instead of handing a spec to a team of developers, you hand it to AI. But the hard part — figuring out what to build, defining the requirements, thinking through edge cases — that is still your job. That is the skill that matters.
 
-### Setup
+When you write a PRD in this sandbox, you are not taking a shortcut. You are practicing the same skill that senior engineers, product managers, and startup founders use every day. Vibecoding is spec-driven development with an AI teammate.
 
-1. Fork this repo — this creates your own copy on GitHub so you can save your work:
+## For Students
 
-   - Make sure you are signed in to [GitHub](https://github.com/)
-   - Go to the top of this repo's page and click the **Fork** button (upper right)
-   - On the "Create a new fork" page, leave everything as-is and click **Create fork**
-   - You now have your own copy at `github.com/YOUR-USERNAME/vibecode-learning-sandbox`
+Here is what you can expect from this sandbox:
 
-2. Clone your fork — this downloads the code to your computer:
-
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/vibecode-learning-sandbox.git
-   cd vibecode-learning-sandbox
-   ```
-
-   Replace `YOUR-USERNAME` with your actual GitHub username.
-
-3. Install dependencies:
-
-   ```bash
-   pnpm install
-   ```
-
-4. Run the tictactoe app to see it in action:
-
-   ```bash
-   cd apps/tictactoe
-   pnpm dev
-   ```
-
-   Then open http://localhost:2025 in your browser.
-
-5. Open Claude Code in the repo root and choose your path:
-
-   **Option A: Follow the curriculum** — if you want a structured foundation before building, start with the 14-week curriculum. Tell Claude:
-
-   ```
-   You: "Give me exercises for Week 1, Lesson 1"
-   ```
-
-   See the full curriculum: [docs/curriculum.md](docs/curriculum.md)
-
-   **Option B: Start building** — if you want to jump straight into creating an app, start the learning flow:
-
-   ```
-   You: "I want to build an app. Can you help me create a PRD?"
-   ```
+- **You choose what to build** — follow the [14-week curriculum](docs/curriculum.md) for a guided path, or skip it and build whatever you want. Both work.
+- **You always get the right kind of help** — when you ask Claude to build something, it builds. When you ask it to teach you, it teaches. It switches automatically so you never have to think about it.
+- **You finish with real things** — every cycle gives you a working app, a learning guide that explains what was built, and a feature you coded yourself. Not just theory.
+- **It grows with you** — your first app might be a simple page with a button. A few projects later, you will be building apps with databases and APIs. The sandbox meets you where you are.
 
 ## Project Structure
 
@@ -160,15 +195,6 @@ vibecode-learning-sandbox/
 │   └── curriculum.md       # 14-week bootcamp curriculum (84 lessons)
 └── CLAUDE.md               # Instructions that tell Claude how to help you
 ```
-
-## For Students
-
-Here is what you can expect from this sandbox:
-
-- **You choose what to build** — follow the [14-week curriculum](docs/curriculum.md) for a guided path, or skip it and build whatever you want. Both work.
-- **You always get the right kind of help** — when you ask Claude to build something, it builds. When you ask it to teach you, it teaches. It switches automatically so you never have to think about it.
-- **You finish with real things** — every cycle gives you a working app, a learning guide that explains what was built, and a feature you coded yourself. Not just theory.
-- **It grows with you** — your first app might be a simple page with a button. A few projects later, you will be building apps with databases and APIs. The sandbox meets you where you are.
 
 ## Tech Stack
 
