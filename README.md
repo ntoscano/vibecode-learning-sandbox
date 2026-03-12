@@ -36,6 +36,14 @@ Verify it worked:
 claude --version
 ```
 
+> **Claude can help with the rest of the setup.** Once Claude Code is working, open it in your terminal and give it this repo's URL:
+>
+> ```
+> "Help me set up this repo: https://github.com/ntoscano/vibecode-learning-sandbox"
+> ```
+>
+> Claude will walk you through installing everything, forking, cloning, and running your first app. You can still follow the steps below manually if you prefer.
+
 > **What about other AI tools?** Claude Code is special because it works directly on your computer — it can read your files, run commands, and build things for you. Other AI chats like [ChatGPT](https://chatgpt.com) and [Gemini](https://gemini.google.com) are great for answering questions and explaining concepts, but they cannot do the work on your machine. Use whatever helps you learn, but Claude Code is what powers this sandbox.
 
 ### Step 3: Install the Rest
