@@ -34,6 +34,9 @@ module.exports = {
 			rules: {
 				'@typescript-eslint/ban-ts-comment': 'warn',
 				'@typescript-eslint/explicit-module-boundary-types': 'off',
+				'@typescript-eslint/no-unused-vars': 'warn',
+				'@typescript-eslint/no-non-null-assertion': 'off',
+				'@typescript-eslint/no-explicit-any': 'warn',
 			},
 		},
 		{
@@ -53,6 +56,19 @@ module.exports = {
 		'react/react-in-jsx-scope': 'off',
 		'react-hooks/rules-of-hooks': 'error',
 		'react-hooks/exhaustive-deps': 'warn',
+
+		// Accessibility — educational warnings, not blockers
+		'jsx-a11y/label-has-associated-control': 'warn',
+		'jsx-a11y/anchor-is-valid': 'warn',
+		'jsx-a11y/click-events-have-key-events': 'warn',
+		'jsx-a11y/no-static-element-interactions': 'warn',
 		'jsx-a11y/no-noninteractive-element-to-interactive-role': 'warn',
+		'jsx-a11y/alt-text': 'warn',
+		'jsx-a11y/anchor-has-content': 'warn',
+
+		// Common beginner patterns
+		'no-unused-vars': 'warn',
+		'no-console': 'off',
+		'prefer-const': 'warn',
 	},
 };
